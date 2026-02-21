@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>鸿泰咨询 | Hongtai Consulting</title>
+  <meta name="description" content="鸿泰咨询专注生命科学领域的解决方案与能力培养：以证据与战略为基础，支持医学事务与跨职能团队实现高质量决策与可执行落地。" />
+
+  <!-- 上线后可打开：把 canonical 指向你的主域名 -->
+  <!-- <link rel="canonical" href="https://hongtaiconsult.com/" /> -->
+
+  <style>
+    :root{
+      --bg: #f7f9fc;
+      --surface: #ffffff;
+      --surface2: #f3f6fb;
+      --text: #0f172a;
+      --muted: #475569;
+      --line: rgba(15, 23, 42, .10);
+
+      /* 取你logo的“橙 + 深蓝”气质 */
+      --accent: #f97316;        /* 橙 */
+      --accent2:#1e3a8a;        /* 深蓝 */
+      --shadow: 0 14px 40px rgba(15, 23, 42, .10);
+      --radius: 18px;
+      --max: 1120px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "PingFang SC", "Microsoft YaHei", Arial;
+      color: var(--text);
+      background:
+        radial-gradient(900px 480px at 15% 8%, rgba(249,115,22,.10), transparent 60%),
+        radial-gradient(900px 480px at 85% 10%, rgba(30,58,138,.12), transparent 60%),
+        linear-gradient(180deg, #ffffff 0%, var(--bg) 55%, #ffffff 100%);
+      overflow-x:hidden;
+    }
+
+    /* 轻量“科技感网格”背景（极克制） */
+    .grid-bg{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .45;
+      background-image:
+        linear-gradient(to right, rgba(15,23,42,.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(15,23,42,.06) 1px, transparent 1px);
+      background-size: 52px 52px;
+      mask-image: radial-gradient(700px 520px at 50% 0%, rgba(0,0,0,1), rgba(0,0,0,0));
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    .wrap{ max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255,255,255,.72);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 14px 0;
+      gap: 16px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width: 240px;
+    }
+
+    /* ✅ 针对你这类“横向大Logo”的专业写法：只限制高度、宽度自适应 */
+    .brand img{
+      height: 42px;
+      width: auto;
+      max-width: 160px; /* 避免小屏撑爆 */
+      object-fit: contain;
+      display:block;
+    }
+
+    .brand .name{
+      display:flex;
+      flex-direction:column;
+      line-height:1.05;
+    }
+    .brand .name .cn{
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+    .brand .name .en{
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: .9px;
+      margin-top: 4px;
+    }
+
+    .navlinks{
+      display:flex;
+      gap: 18px;
+      align-items:center;
+      color: var(--muted);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    .navlinks a:hover{ color: var(--text); }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.8);
+      transition: .2s ease;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    .btn:hover{ transform: translateY(-1px); border-color: rgba(249,115,22,.55); }
+    .btn.primary{
+      border-color: rgba(249,115,22,.55);
+      background: linear-gradient(135deg, rgba(249,115,22,.12), rgba(30,58,138,.08));
+      box-shadow: 0 14px 36px rgba(249,115,22,.10);
+    }
+
+    /* HERO */
+    .hero{ padding: 70px 0 34px; }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .hero-card{
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-card:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(620px 260px at 18% 10%, rgba(249,115,22,.16), transparent 55%),
+        radial-gradient(720px 260px at 82% 30%, rgba(30,58,138,.14), transparent 58%);
+      z-index:0;
+      opacity:.95;
+    }
+    .hero-card > *{ position: relative; z-index: 1; }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.75);
+      color: var(--muted);
+      font-size: 13px;
+      width: fit-content;
+    }
+    .pill i{
+      width: 8px; height: 8px; border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(249,115,22,.12);
+    }
+
+    h1{
+      margin: 16px 0 10px;
+      font-size: 42px;
+      line-height: 1.10;
+      letter-spacing: -0.4px;
+    }
+    .lead{
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.85;
+      max-width: 68ch;
+    }
+    .cta{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 16px; }
+
+    .hero-side{
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .metric{
+      display:grid;
+      gap: 10px;
+    }
+    .metric .row{
+      display:flex;
+      justify-content:space-between;
+      gap: 12px;
+      padding: 12px 12px;
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 14px;
+      background: rgba(243,246,251,.75);
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .metric .row b{ color: var(--text); font-weight: 650; }
+    .tagline{
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    /* SECTION */
+    section{ padding: 40px 0; }
+    .section-title{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .section-title h2{
+      margin:0;
+      font-size: 22px;
+      letter-spacing: .2px;
+    }
+    .section-title p{
+      margin:0;
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 80ch;
+      line-height: 1.7;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+    .card{
+      grid-column: span 3;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      min-height: 164px;
+      transition: .2s ease;
+      box-shadow: 0 10px 24px rgba(15,23,42,.06);
+    }
+    .card:hover{
+      transform: translateY(-3px);
+      border-color: rgba(249,115,22,.55);
+      box-shadow: 0 16px 34px rgba(15,23,42,.10);
+    }
+    .kicker{
+      font-size: 12px;
+      color: rgba(30,58,138,.85);
+      letter-spacing: .35px;
+      margin-bottom: 10px;
+      display:flex;
+      align-items:center;
+      gap: 8px;
+    }
+    .dot{
+      width: 7px; height: 7px; border-radius: 99px;
+      background: var(--accent);
+      box-shadow: 0 0 0 5px rgba(249,115,22,.10);
+    }
+    .card h3{
+      margin: 0 0 8px;
+      font-size: 16px;
+      letter-spacing: .2px;
+    }
+    .card p{
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.75;
+    }
+
+    .two-col{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .panel{
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 10px 24px rgba(15,23,42,.06);
+    }
+    .list{
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      display:grid;
+      gap: 10px;
+    }
+    .list li{
+      padding: 12px 12px;
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 14px;
+      background: rgba(243,246,251,.70);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+    .list b{ color: var(--text); font-weight: 650; }
+
+    footer{
+      padding: 26px 0 40px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .foot{
+      display:flex;
+      justify-content:space-between;
+      gap: 14px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      h1{ font-size: 36px; }
+      .card{ grid-column: span 6; }
+      .two-col{ grid-template-columns: 1fr; }
+      .navlinks{ display:none; }
+    }
+    @media (max-width: 560px){
+      .card{ grid-column: span 12; }
+      h1{ font-size: 32px; }
+      .brand img{ height: 38px; max-width: 140px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="grid-bg"></div>
+
+  <header>
+    <div class="wrap">
+      <div class="nav">
+        <a class="brand" href="#">
+          <img src="assets/logo.png" alt="鸿泰咨询 Logo">
+          <div class="name">
+            <span class="cn">鸿泰咨询</span>
+            <span class="en">Hongtai Consulting</span>
+          </div>
+        </a>
+
+        <nav class="navlinks">
+          <a href="#services">服务</a>
+          <a href="#approach">方法</a>
+          <a href="#cases">适用场景</a>
+          <a href="#contact">联系</a>
+        </nav>
+
+        <a class="btn primary" href="#contact">联系咨询</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-card">
+          <div class="pill"><i></i> Evidence · Strategy · Enablement</div>
+          <h1>更清晰的判断<br><span style="color:var(--accent)">更可执行的落地</span></h1>
+          <p class="lead">
+            鸿泰咨询为生命科学团队提供面向决策的解决方案与能力培养。
+            我们以证据为基础、以战略为牵引，帮助医学事务与跨职能团队在复杂不确定环境中提升决策质量与执行一致性。
+          </p>
+          <div class="cta">
+            <a class="btn primary" href="#services">查看核心服务</a>
+            <a class="btn" href="#approach">了解工作方式</a>
+          </div>
+        </div>
+
+        <aside class="hero-side">
+          <div class="metric">
+            <div class="row"><span>核心内容</span><b>Solutions + Capability Development</b></div>
+            <div class="row"><span>关注点</span><b>决策质量 · 执行一致性</b></div>
+            <div class="row"><span>工作方式</span><b>结构化框架 · 可复用资产</b></div>
+            <div class="row"><span>技术应用</span><b>AI 辅助 · 人做判断</b></div>
+          </div>
+          <p class="tagline">
+            风格：简洁、透明、可追溯。以可交付输出与团队能力沉淀为目标。
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services">
+      <div class="section-title">
+        <div>
+          <h2>Core Services</h2>
+          <p>聚焦两类核心交付：解决方案（帮助做对决策）与能力培养（帮助持续做对）。</p>
+        </div>
+      </div>
+
+      <div class="cards">
+        <!-- 核心 1：Solutions -->
+        <div class="card" style="grid-column: span 6;">
+          <div class="kicker"><span class="dot"></span>01 / Solutions</div>
+          <h3>Decision Support Solutions</h3>
+          <p>
+            围绕关键决策问题，提供端到端支持：澄清问题边界、构建分析框架、形成可解释结论与可执行建议。
+            输出强调“可沟通、可落地、可复用”。
+          </p>
+        </div>
+
+        <!-- 核心 2：Capability Development -->
+        <div class="card" style="grid-column: span 6;">
+          <div class="kicker"><span class="dot"></span>02 / Capability Development</div>
+          <h3>Capability Development & Enablement</h3>
+          <p>
+            通过训练 + 工具 + 模板资产沉淀，提升团队在证据分析、战略判断与项目推进上的系统能力，
+            让能力成为组织的可持续优势。
+          </p>
+        </div>
+
+        <!-- 支撑模块：Evidence -->
+        <div class="card">
+          <div class="kicker"><span class="dot"></span>03 / Evidence</div>
+          <h3>Evidence Review & Insight</h3>
+          <p>对现有证据进行结构化评估与缺口识别，明确不确定性来源，支持稳健判断与风险管理。</p>
+        </div>
+
+        <!-- 支撑模块：Strategy -->
+        <div class="card">
+          <div class="kicker"><span class="dot"></span>04 / Strategy</div>
+          <h3>Medical Strategy Support</h3>
+          <p>支持将医学策略转化为可执行计划：信息传递策略、年度节奏、关键里程碑与协同机制。</p>
+        </div>
+
+        <!-- 支撑模块：Execution -->
+        <div class="card">
+          <div class="kicker"><span class="dot"></span>05 / Execution</div>
+          <h3>Program & Project Enablement</h3>
+          <p>为多项目并行与复杂协作提供工作流工具化支持：优先级、节奏管理、风险预警与复盘机制。</p>
+        </div>
+
+        <!-- 支撑模块：AI -->
+        <div class="card">
+          <div class="kicker"><span class="dot"></span>06 / AI</div>
+          <h3>AI-Enabled Workflows</h3>
+          <p>在合适边界内引入 AI：用于检索、结构化、摘要与一致性提升；保留人工判断与可追溯记录。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- APPROACH -->
+    <section id="approach">
+      <div class="section-title">
+        <div>
+          <h2>How We Work</h2>
+          <p>高端与“科技感”不靠炫技，而靠结构：输入清晰、判断透明、输出可复用。</p>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <h3 style="margin:0 0 8px;">交付原则</h3>
+          <ul class="list">
+            <li><b>决策优先：</b>先回答“要不要做 / 做什么 / 先做哪个”。</li>
+            <li><b>结构化表达：</b>用框架、清单与示例替代长篇文字。</li>
+            <li><b>可复用资产：</b>模板与工具沉淀为团队能力与组织资产。</li>
+            <li><b>技术克制：</b>AI 提效，但不替代专业结论与责任边界。</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h3 style="margin:0 0 8px;">典型流程（示例）</h3>
+          <ul class="list">
+            <li><b>对齐决策问题：</b>明确场景、目标、约束与成功标准。</li>
+            <li><b>搭建分析框架：</b>建立评价维度与证据需求结构。</li>
+            <li><b>形成判断结论：</b>给出结论、前提条件与关键不确定性。</li>
+            <li><b>输出可执行建议：</b>路线、优先级、里程碑与风险应对。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CASES / FIT -->
+    <section id="cases">
+      <div class="section-title">
+        <div>
+          <h2>Where It Fits</h2>
+          <p>适用于需要“更快支持决策 + 更稳定落地”的场景（示例）。</p>
+        </div>
+      </div>
+
+      <div class="cards">
+        <div class="card" style="grid-column: span 4;">
+          <h3>策略形成与校准</h3>
+          <p>策略方向已明确，但证据支撑与优先级不清，需要结构化判断与取舍。</p>
+        </div>
+        <div class="card" style="grid-column: span 4;">
+          <h3>多方案对比与选择</h3>
+          <p>多种选项并行，需在现实约束下明确路径、节奏与资源配置逻辑。</p>
+        </div>
+        <div class="card" style="grid-column: span 4;">
+          <h3>团队能力体系化</h3>
+          <p>希望把“个人经验”变成“组织能力”：形成方法、模板、工具与训练闭环。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="section-title">
+        <div>
+          <h2>Contact</h2>
+          <p>建议你在邮件中包含：TA/产品、决策问题、时间窗口、现有材料与期望交付。</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <p style="margin:0; color:var(--muted); line-height:1.85;">
+          邮箱（先占位，后续可替换为你的域名邮箱）：<br>
+          <b style="color:var(--text)">contact@hongtaiconsult.com</b>
+        </p>
+      </div>
+    </section>
+
+    <footer>
+      <div class="foot">
+        <div>© <span id="y"></span> Hongtai Consulting</div>
+        <div>Evidence · Strategy · Solutions · Capability Development</div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
