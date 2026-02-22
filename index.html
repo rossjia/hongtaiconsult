@@ -3,11 +3,29 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>鸿泰咨询 | Hongtai Consulting</title>
-  <meta name="description" content="鸿泰咨询专注生命科学领域的解决方案与能力培养：以证据与战略为基础，支持医学事务与跨职能团队实现高质量决策与可执行落地。" />
 
-  <!-- 上线后可打开：把 canonical 指向你的主域名 -->
-  <!-- <link rel="canonical" href="https://hongtaiconsult.com/" /> -->
+  <title>鸿泰咨询 | Hongtai Consulting</title>
+  <meta name="description" content="鸿泰咨询聚焦生命科学领域：以策略（Strategy）牵引方向，以证据（Evidence）支撑判断，以能力（Capability）沉淀组织复用，交付可落地的解决方案（Solutions）。" />
+
+  <!-- Canonical：指向主域名 -->
+  <link rel="canonical" href="https://hongtaiconsult.com/" />
+
+  <!-- Open Graph（可选但建议，利于微信/社媒分享展示） -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="鸿泰咨询 | Hongtai Consulting" />
+  <meta property="og:description" content="策略 · 证据 · 能力 · 解决方案 —— 面向决策与落地的生命科学咨询" />
+  <meta property="og:url" content="https://hongtaiconsult.com/" />
+  <!-- 如果未来你准备好一张分享图，可替换为 /assets/og.png -->
+  <!-- <meta property="og:image" content="https://hongtaiconsult.com/assets/og.png" /> -->
+
+  <!-- Google tag (gtag.js) - GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YWJHS09XRS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YWJHS09XRS');
+  </script>
 
   <style>
     :root{
@@ -38,7 +56,7 @@
       overflow-x:hidden;
     }
 
-    /* 轻量“科技感网格”背景（极克制） */
+    /* 轻量网格背景（克制） */
     .grid-bg{
       position: fixed;
       inset: 0;
@@ -78,11 +96,11 @@
       min-width: 240px;
     }
 
-    /* ✅ 针对你这类“横向大Logo”的专业写法：只限制高度、宽度自适应 */
+    /* 横向大Logo：限制高度，宽度自适应 */
     .brand img{
       height: 42px;
       width: auto;
-      max-width: 160px; /* 避免小屏撑爆 */
+      max-width: 170px;
       object-fit: contain;
       display:block;
     }
@@ -244,7 +262,7 @@
       margin:0;
       color: var(--muted);
       font-size: 14px;
-      max-width: 80ch;
+      max-width: 92ch;
       line-height: 1.7;
     }
 
@@ -259,7 +277,7 @@
       border: 1px solid var(--line);
       border-radius: 16px;
       padding: 18px;
-      min-height: 164px;
+      min-height: 168px;
       transition: .2s ease;
       box-shadow: 0 10px 24px rgba(15,23,42,.06);
     }
@@ -324,6 +342,68 @@
     }
     .list b{ color: var(--text); font-weight: 650; }
 
+    /* CONTACT */
+    .contact-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+    .contact-box{
+      background: rgba(243,246,251,.55);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .contact-title{
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: var(--text);
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+    .qr-wrap{
+      display:flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .qr{
+      width: 180px;
+      height: 180px;
+      border-radius: 14px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: #fff;
+      object-fit: contain;
+      display:block;
+    }
+    .mini{
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.75;
+    }
+    .mail{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.9);
+      font-size: 14px;
+      color: var(--text);
+      transition: .2s ease;
+      width: fit-content;
+    }
+    .mail:hover{ transform: translateY(-1px); border-color: rgba(249,115,22,.55); }
+    .hint{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
     footer{
       padding: 26px 0 40px;
       border-top: 1px solid var(--line);
@@ -344,12 +424,14 @@
       h1{ font-size: 36px; }
       .card{ grid-column: span 6; }
       .two-col{ grid-template-columns: 1fr; }
+      .contact-grid{ grid-template-columns: 1fr; }
       .navlinks{ display:none; }
     }
     @media (max-width: 560px){
       .card{ grid-column: span 12; }
       h1{ font-size: 32px; }
-      .brand img{ height: 38px; max-width: 140px; }
+      .brand img{ height: 38px; max-width: 150px; }
+      .qr{ width: 168px; height: 168px; }
     }
   </style>
 </head>
@@ -360,7 +442,7 @@
   <header>
     <div class="wrap">
       <div class="nav">
-        <a class="brand" href="#">
+        <a class="brand" href="#top" aria-label="返回顶部">
           <img src="assets/logo.png" alt="鸿泰咨询 Logo">
           <div class="name">
             <span class="cn">鸿泰咨询</span>
@@ -368,46 +450,90 @@
           </div>
         </a>
 
-        <nav class="navlinks">
+        <nav class="navlinks" aria-label="主导航">
+          <a href="#pillars">定位</a>
           <a href="#services">服务</a>
           <a href="#approach">方法</a>
-          <a href="#cases">适用场景</a>
+          <a href="#scenes">场景</a>
           <a href="#contact">联系</a>
         </nav>
 
-        <a class="btn primary" href="#contact">联系咨询</a>
+        <a class="btn primary" href="#contact">微信/邮件咨询</a>
       </div>
     </div>
   </header>
 
-  <main class="wrap">
+  <main id="top" class="wrap">
     <!-- HERO -->
     <section class="hero">
       <div class="hero-grid">
         <div class="hero-card">
-          <div class="pill"><i></i> Evidence · Strategy · Enablement</div>
-          <h1>更清晰的判断<br><span style="color:var(--accent)">更可执行的落地</span></h1>
+          <div class="pill"><i></i> Strategy · Evidence · Capability · Solutions</div>
+
+          <h1>
+            用<span style="color:var(--accent)">更清晰的策略</span><br>
+            做<span style="color:var(--accent2)">更稳健的决策</span>
+          </h1>
+
           <p class="lead">
-            鸿泰咨询为生命科学团队提供面向决策的解决方案与能力培养。
-            我们以证据为基础、以战略为牵引，帮助医学事务与跨职能团队在复杂不确定环境中提升决策质量与执行一致性。
+            鸿泰咨询聚焦生命科学领域的“决策与落地”：
+            以<strong>策略（Strategy）</strong>牵引方向，以<strong>证据（Evidence）</strong>支撑判断，
+            以<strong>能力（Capability）</strong>沉淀组织复用，交付可执行的<strong>解决方案（Solutions）</strong>。
           </p>
+
           <div class="cta">
             <a class="btn primary" href="#services">查看核心服务</a>
-            <a class="btn" href="#approach">了解工作方式</a>
+            <a class="btn" href="#contact">直接联系我</a>
           </div>
         </div>
 
-        <aside class="hero-side">
+        <aside class="hero-side" aria-label="关键信息">
           <div class="metric">
-            <div class="row"><span>核心内容</span><b>Solutions + Capability Development</b></div>
-            <div class="row"><span>关注点</span><b>决策质量 · 执行一致性</b></div>
-            <div class="row"><span>工作方式</span><b>结构化框架 · 可复用资产</b></div>
+            <div class="row"><span>定位</span><b>面向决策的咨询与赋能</b></div>
+            <div class="row"><span>交付</span><b>结构化结论 + 可复用资产</b></div>
+            <div class="row"><span>风格</span><b>简洁透明 · 可追溯</b></div>
             <div class="row"><span>技术应用</span><b>AI 辅助 · 人做判断</b></div>
           </div>
           <p class="tagline">
-            风格：简洁、透明、可追溯。以可交付输出与团队能力沉淀为目标。
+            你不需要“更长的报告”，你需要的是：问题边界更清楚、判断更稳健、落地更一致。
           </p>
         </aside>
+      </div>
+    </section>
+
+    <!-- PILLARS -->
+    <section id="pillars">
+      <div class="section-title">
+        <div>
+          <h2>四大主轴</h2>
+          <p>首页表达以“策略、证据、能力、解决方案”为中心：既能说明你是谁，也能说明你能交付什么。</p>
+        </div>
+      </div>
+
+      <div class="cards">
+        <div class="card" style="grid-column: span 3;">
+          <div class="kicker"><span class="dot"></span>Strategy</div>
+          <h3>策略牵引</h3>
+          <p>把“方向”说清：目标、边界、优先级与成功标准一致，减少组织内耗。</p>
+        </div>
+
+        <div class="card" style="grid-column: span 3;">
+          <div class="kicker"><span class="dot"></span>Evidence</div>
+          <h3>证据支撑</h3>
+          <p>把“不确定性”说清：证据质量、缺口性质与决策风险，一目了然。</p>
+        </div>
+
+        <div class="card" style="grid-column: span 3;">
+          <div class="kicker"><span class="dot"></span>Capability</div>
+          <h3>能力沉淀</h3>
+          <p>把“个人经验”变成“组织能力”：方法、模板、工具与训练可复用。</p>
+        </div>
+
+        <div class="card" style="grid-column: span 3;">
+          <div class="kicker"><span class="dot"></span>Solutions</div>
+          <h3>解决方案落地</h3>
+          <p>把“结论”变成“行动”：路线、里程碑、节奏与风险应对，能执行。</p>
+        </div>
       </div>
     </section>
 
@@ -416,57 +542,51 @@
       <div class="section-title">
         <div>
           <h2>Core Services</h2>
-          <p>聚焦两类核心交付：解决方案（帮助做对决策）与能力培养（帮助持续做对）。</p>
+          <p>聚焦“判断”与“落地”两类关键交付：既解决当下问题，也沉淀未来复用。</p>
         </div>
       </div>
 
       <div class="cards">
-        <!-- 核心 1：Solutions -->
         <div class="card" style="grid-column: span 6;">
           <div class="kicker"><span class="dot"></span>01 / Solutions</div>
           <h3>Decision Support Solutions</h3>
           <p>
-            围绕关键决策问题，提供端到端支持：澄清问题边界、构建分析框架、形成可解释结论与可执行建议。
+            围绕关键决策问题提供端到端支持：澄清问题边界、建立评价框架、形成可解释结论与可执行建议。
             输出强调“可沟通、可落地、可复用”。
           </p>
         </div>
 
-        <!-- 核心 2：Capability Development -->
         <div class="card" style="grid-column: span 6;">
-          <div class="kicker"><span class="dot"></span>02 / Capability Development</div>
-          <h3>Capability Development & Enablement</h3>
+          <div class="kicker"><span class="dot"></span>02 / Capability</div>
+          <h3>Capability Development</h3>
           <p>
-            通过训练 + 工具 + 模板资产沉淀，提升团队在证据分析、战略判断与项目推进上的系统能力，
-            让能力成为组织的可持续优势。
+            通过训练 + 工具 + 模板资产沉淀，提升团队在证据分析、策略判断与项目推进上的系统能力，
+            让能力成为组织的长期优势。
           </p>
         </div>
 
-        <!-- 支撑模块：Evidence -->
         <div class="card">
           <div class="kicker"><span class="dot"></span>03 / Evidence</div>
           <h3>Evidence Review & Insight</h3>
-          <p>对现有证据进行结构化评估与缺口识别，明确不确定性来源，支持稳健判断与风险管理。</p>
+          <p>结构化评估现有证据、识别缺口与不确定性来源，支持稳健判断与风险管理。</p>
         </div>
 
-        <!-- 支撑模块：Strategy -->
         <div class="card">
           <div class="kicker"><span class="dot"></span>04 / Strategy</div>
           <h3>Medical Strategy Support</h3>
-          <p>支持将医学策略转化为可执行计划：信息传递策略、年度节奏、关键里程碑与协同机制。</p>
+          <p>将策略转为可执行计划：核心信息、年度节奏、关键里程碑与协同机制。</p>
         </div>
 
-        <!-- 支撑模块：Execution -->
         <div class="card">
           <div class="kicker"><span class="dot"></span>05 / Execution</div>
-          <h3>Program & Project Enablement</h3>
-          <p>为多项目并行与复杂协作提供工作流工具化支持：优先级、节奏管理、风险预警与复盘机制。</p>
+          <h3>Program Enablement</h3>
+          <p>多项目并行的工具化支持：优先级、节奏管理、风险预警与复盘机制。</p>
         </div>
 
-        <!-- 支撑模块：AI -->
         <div class="card">
           <div class="kicker"><span class="dot"></span>06 / AI</div>
-          <h3>AI-Enabled Workflows</h3>
-          <p>在合适边界内引入 AI：用于检索、结构化、摘要与一致性提升；保留人工判断与可追溯记录。</p>
+          <h3>AI-Enabled Workflow</h3>
+          <p>在合适边界内引入 AI：检索、结构化、摘要与一致性提升；保留人工判断与可追溯记录。</p>
         </div>
       </div>
     </section>
@@ -503,8 +623,8 @@
       </div>
     </section>
 
-    <!-- CASES / FIT -->
-    <section id="cases">
+    <!-- SCENES -->
+    <section id="scenes">
       <div class="section-title">
         <div>
           <h2>Where It Fits</h2>
@@ -517,12 +637,14 @@
           <h3>策略形成与校准</h3>
           <p>策略方向已明确，但证据支撑与优先级不清，需要结构化判断与取舍。</p>
         </div>
+
         <div class="card" style="grid-column: span 4;">
           <h3>多方案对比与选择</h3>
           <p>多种选项并行，需在现实约束下明确路径、节奏与资源配置逻辑。</p>
         </div>
+
         <div class="card" style="grid-column: span 4;">
-          <h3>团队能力体系化</h3>
+          <h3>能力体系化建设</h3>
           <p>希望把“个人经验”变成“组织能力”：形成方法、模板、工具与训练闭环。</p>
         </div>
       </div>
@@ -533,22 +655,49 @@
       <div class="section-title">
         <div>
           <h2>Contact</h2>
-          <p>建议你在邮件中包含：TA/产品、决策问题、时间窗口、现有材料与期望交付。</p>
+          <p>你可以先用微信（首选）快速对齐需求；若需发送材料/正式文件，可用邮箱。</p>
         </div>
       </div>
 
       <div class="panel">
-        <p style="margin:0; color:var(--muted); line-height:1.85;">
-          邮箱（先占位，后续可替换为你的域名邮箱）：<br>
-          <b style="color:var(--text)">contact@hongtaiconsult.com</b>
-        </p>
+        <div class="contact-grid">
+          <!-- WeChat -->
+          <div class="contact-box">
+            <div class="contact-title">微信咨询（首选）</div>
+            <div class="qr-wrap">
+              <img class="qr" src="assets/wechat.png" alt="微信二维码" loading="lazy">
+              <p class="mini">
+                扫码添加后请备注：<b>公司/角色/需求</b><br>
+                例如：<span style="color:var(--text); font-weight:650;">“XX药企 / MA / 证据评估与策略支持”</span><br><br>
+                <span style="color:var(--muted);">
+                  回复边界：工作日 9:00–18:00 优先回复；紧急事项请在首句标注【紧急】。
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="contact-box">
+            <div class="contact-title">邮箱（材料/正式文件）</div>
+
+            <a class="mail"
+               href="mailto:contact@hongtaiconsult.com?subject=%E9%B8%BF%E6%B3%B0%E5%92%A8%E8%AF%A2%20%7C%20%E5%90%88%E4%BD%9C%E5%92%A8%E8%AF%A2&body=%E5%85%AC%E5%8F%B8%2F%E8%A7%92%E8%89%B2%EF%BC%9A%0A%E5%86%B3%E7%AD%96%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E6%97%B6%E9%97%B4%E7%AA%97%E5%8F%A3%EF%BC%9A%0A%E7%8E%B0%E6%9C%89%E6%9D%90%E6%96%99%EF%BC%9A%0A%E6%9C%9F%E6%9C%9B%E4%BA%A4%E4%BB%98%EF%BC%9A%0A">
+              contact@hongtaiconsult.com
+            </a>
+
+            <div class="hint">
+              为了更快进入有效沟通，建议包含：TA/产品、决策问题、时间窗口、现有材料、期望交付。
+              （邮箱不做即时沟通入口，微信优先。）
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
     <footer>
       <div class="foot">
         <div>© <span id="y"></span> Hongtai Consulting</div>
-        <div>Evidence · Strategy · Solutions · Capability Development</div>
+        <div>Strategy · Evidence · Capability · Solutions</div>
       </div>
     </footer>
   </main>
