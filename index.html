@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <title>鸿泰咨询 | Hongtai Consulting</title>
-  <meta name="description" content="鸿泰咨询聚焦生命科学领域：以策略（Strategy）牵引方向，以证据（Evidence）支撑判断，以能力（Capability）沉淀组织复用，交付可落地的解决方案（Solutions）。" />
+  <meta name="description" content="鸿泰咨询面向生命科学领域提供结构化的决策支持与能力建设：策略定义、证据评估、能力建设、解决方案落地。" />
 
-  <!-- Canonical：指向主域名 -->
+  <!-- Canonical -->
   <link rel="canonical" href="https://hongtaiconsult.com/" />
 
-  <!-- Open Graph（建议） -->
+  <!-- Open Graph（克制版） -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="鸿泰咨询 | Hongtai Consulting" />
-  <meta property="og:description" content="策略 · 证据 · 能力 · 解决方案 —— 面向决策与落地的生命科学咨询" />
+  <meta property="og:description" content="结构化决策支持与能力建设｜策略定义 · 证据评估 · 能力建设 · 解决方案落地" />
   <meta property="og:url" content="https://hongtaiconsult.com/" />
 
   <!-- Google tag (gtag.js) - GA4 -->
@@ -27,894 +27,520 @@
 
   <style>
     :root{
-      --bg: #f7f9fc;
-      --surface: #ffffff;
-      --surface2: #f3f6fb;
+      --text:#0f172a;
+      --muted:#475569;
+      --line:rgba(15,23,42,.12);
+      --bg:#ffffff;
+      --soft:#f6f7fb;
+      --accent:#1e3a8a;
+      --accent2:#f97316;
 
-      --text: #0f172a;
-      --muted: #475569;
-      --line: rgba(15, 23, 42, .10);
-
-      --accent: #f97316;   /* 橙 */
-      --accent2:#1e3a8a;   /* 深蓝 */
-
-      --shadow: 0 14px 40px rgba(15, 23, 42, .10);
-      --shadow2: 0 10px 24px rgba(15, 23, 42, .06);
-      --radius: 18px;
-      --max: 1120px;
-
-      --h1: clamp(30px, 4vw, 42px);
-      --h2: 22px;
-      --h3: 16px;
-      --p: 14px;
+      --max: 1040px;
+      --radius: 14px;
     }
 
-    *{ box-sizing:border-box; }
-    html{ scroll-behavior:smooth; }
+    *{box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
     body{
       margin:0;
+      background:var(--bg);
+      color:var(--text);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "PingFang SC", "Microsoft YaHei", Arial;
-      color: var(--text);
-      background:
-        radial-gradient(900px 480px at 15% 8%, rgba(249,115,22,.10), transparent 60%),
-        radial-gradient(900px 480px at 85% 10%, rgba(30,58,138,.12), transparent 60%),
-        linear-gradient(180deg, #ffffff 0%, var(--bg) 55%, #ffffff 100%);
-      overflow-x:hidden;
+      line-height:1.65;
     }
+    a{color:inherit;text-decoration:none;}
+    .wrap{max-width:var(--max); margin:0 auto; padding:0 20px;}
 
-    .grid-bg{
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: .45;
-      background-image:
-        linear-gradient(to right, rgba(15,23,42,.06) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(15,23,42,.06) 1px, transparent 1px);
-      background-size: 52px 52px;
-      mask-image: radial-gradient(700px 520px at 50% 0%, rgba(0,0,0,1), rgba(0,0,0,0));
-    }
-
-    a{ color:inherit; text-decoration:none; }
-    .wrap{ max-width: var(--max); margin: 0 auto; padding: 0 20px; }
-
+    /* Header */
     header{
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(255,255,255,.72);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--line);
+      position:sticky; top:0; z-index:50;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(8px);
+      border-bottom:1px solid var(--line);
     }
-
     .nav{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding: 14px 0;
-      gap: 16px;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 0; gap:16px;
     }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      min-width: 240px;
-    }
-    .brand img{
-      height: 42px;
-      width: auto;
-      max-width: 170px;
-      object-fit: contain;
-      display:block;
-    }
-    .brand .name{
-      display:flex;
-      flex-direction:column;
-      line-height:1.05;
-    }
-    .brand .name .cn{
-      font-size: 16px;
-      font-weight: 750;
-      letter-spacing: .2px;
-    }
-    .brand .name .en{
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: .9px;
-      margin-top: 4px;
-    }
+    .brand{display:flex; align-items:center; gap:12px; min-width:260px;}
+    .brand img{height:38px; width:auto; max-width:170px; object-fit:contain; display:block;}
+    .brand .meta{display:flex; flex-direction:column; line-height:1.05;}
+    .brand .meta b{font-size:15px; letter-spacing:.2px;}
+    .brand .meta span{font-size:12px; color:var(--muted); margin-top:4px; letter-spacing:.6px;}
 
     .navlinks{
-      display:flex;
-      gap: 18px;
-      align-items:center;
-      color: var(--muted);
-      font-size: 14px;
-      white-space: nowrap;
+      display:flex; align-items:center; gap:16px;
+      font-size:13px; color:var(--muted);
+      white-space:nowrap;
     }
-    .navlinks a{ padding: 8px 6px; border-radius: 10px; }
-    .navlinks a:hover{
-      color: var(--text);
-      background: rgba(243,246,251,.85);
-      border: 1px solid rgba(15,23,42,.06);
-    }
+    .navlinks a{padding:8px 8px; border-radius:10px;}
+    .navlinks a:hover{background:var(--soft); color:var(--text);}
 
     .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.85);
-      transition: .2s ease;
-      font-size: 14px;
-      white-space: nowrap;
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:13px;
+      transition:.15s ease;
+      white-space:nowrap;
     }
-    .btn:hover{ transform: translateY(-1px); border-color: rgba(249,115,22,.55); }
+    .btn:hover{transform:translateY(-1px);}
     .btn.primary{
-      border-color: rgba(249,115,22,.55);
-      background: linear-gradient(135deg, rgba(249,115,22,.14), rgba(30,58,138,.10));
-      box-shadow: 0 14px 36px rgba(249,115,22,.10);
+      border-color: rgba(30,58,138,.35);
+      background: rgba(30,58,138,.06);
     }
 
-    /* HERO */
-    .hero{ padding: 70px 0 34px; }
-    .hero-grid{
+    /* Layout */
+    main{padding:34px 0 18px;}
+    section{padding:28px 0;}
+    .divider{border-top:1px solid var(--line); margin:10px 0;}
+
+    /* Hero */
+    .hero{
+      padding-top:12px;
       display:grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 18px;
-      align-items: stretch;
+      grid-template-columns: 1.35fr .65fr;
+      gap:22px;
+      align-items:start;
     }
-    .hero-card{
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 28px;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-card:before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(620px 260px at 18% 10%, rgba(249,115,22,.16), transparent 55%),
-        radial-gradient(720px 260px at 82% 30%, rgba(30,58,138,.14), transparent 58%);
-      z-index:0;
-      opacity:.95;
-    }
-    .hero-card > *{ position: relative; z-index: 1; }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap: 10px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.78);
-      color: var(--muted);
-      font-size: 13px;
-      width: fit-content;
-    }
-    .pill i{
-      width: 8px; height: 8px; border-radius: 999px;
-      background: var(--accent);
-      box-shadow: 0 0 0 6px rgba(249,115,22,.12);
-    }
-
     h1{
-      margin: 16px 0 10px;
-      font-size: var(--h1);
-      line-height: 1.10;
-      letter-spacing: -0.4px;
+      margin:0 0 10px;
+      font-size: clamp(26px, 3.6vw, 38px);
+      letter-spacing:-.3px;
+      line-height:1.15;
     }
-    .lead{
-      margin: 0 0 16px;
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.85;
-      max-width: 70ch;
+    .sub{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:15px;
+      max-width:72ch;
     }
-    .cta{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 16px; }
+    .tagsline{
+      display:flex; flex-wrap:wrap; gap:10px;
+      font-size:12px; color:var(--muted);
+      margin: 12px 0 18px;
+    }
+    .tag{
+      padding:6px 10px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:#fff;
+    }
+    .english{
+      margin-top:10px;
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.6px;
+    }
 
     .hero-side{
-      background: var(--surface);
-      border: 1px solid var(--line);
+      border:1px solid var(--line);
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 22px;
+      background: #fff;
+      padding:14px;
     }
-    .metric{
-      display:grid;
-      gap: 10px;
+    .hero-side .row{
+      display:flex; justify-content:space-between; gap:12px;
+      padding:10px 10px;
+      border:1px solid rgba(15,23,42,.10);
+      border-radius:12px;
+      background: var(--soft);
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:10px;
     }
-    .metric .row{
-      display:flex;
-      justify-content:space-between;
-      gap: 12px;
-      padding: 12px 12px;
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 14px;
-      background: rgba(243,246,251,.78);
-      font-size: 14px;
-      color: var(--muted);
-    }
-    .metric .row b{ color: var(--text); font-weight: 700; }
-    .tagline{
-      margin: 14px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.7;
+    .hero-side .row b{color:var(--text); font-weight:700;}
+    .hero-side .note{
+      margin: 0;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.7;
     }
 
-    /* SECTION */
-    section{ padding: 40px 0; }
-    .section-title{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap: 16px;
-      margin-bottom: 16px;
+    /* Section title */
+    .stitle{
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap:16px; margin-bottom:12px;
     }
-    .section-title h2{
-      margin:0;
-      font-size: var(--h2);
-      letter-spacing: .2px;
-    }
-    .section-title p{
-      margin:0;
-      color: var(--muted);
-      font-size: 14px;
-      max-width: 92ch;
-      line-height: 1.7;
-    }
+    .stitle h2{margin:0; font-size:18px; letter-spacing:.2px;}
+    .stitle p{margin:0; color:var(--muted); font-size:13px; line-height:1.7; max-width:90ch;}
 
-    .cards{
+    /* Capability grid (minimal) */
+    .grid{
       display:grid;
       grid-template-columns: repeat(12, 1fr);
-      gap: 14px;
+      gap:12px;
     }
     .card{
       grid-column: span 3;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 18px;
-      min-height: 168px;
-      transition: .2s ease;
-      box-shadow: var(--shadow2);
-    }
-    .card:hover{
-      transform: translateY(-3px);
-      border-color: rgba(249,115,22,.55);
-      box-shadow: 0 16px 34px rgba(15,23,42,.10);
-    }
-
-    .kicker{
-      font-size: 12px;
-      color: rgba(30,58,138,.86);
-      letter-spacing: .35px;
-      margin-bottom: 10px;
-      display:flex;
-      align-items:center;
-      gap: 8px;
-    }
-    .dot{
-      width: 7px; height: 7px; border-radius: 99px;
-      background: var(--accent);
-      box-shadow: 0 0 0 5px rgba(249,115,22,.10);
-    }
-    .card h3{
-      margin: 0 0 8px;
-      font-size: var(--h3);
-      letter-spacing: .2px;
-    }
-    .card p{
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.75;
-    }
-
-    .two-col{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-    .panel{
-      background: var(--surface);
-      border: 1px solid var(--line);
+      border:1px solid var(--line);
       border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: var(--shadow2);
+      background:#fff;
+      padding:14px;
     }
-    .list{
-      margin: 10px 0 0;
-      padding: 0;
-      list-style: none;
-      display:grid;
-      gap: 10px;
-    }
-    .list li{
-      padding: 12px 12px;
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 14px;
-      background: rgba(243,246,251,.75);
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.65;
-    }
-    .list b{ color: var(--text); font-weight: 700; }
-
-    /* PRINCIPAL */
-    .principal{
-      display:grid;
-      grid-template-columns: 0.95fr 1.05fr;
-      gap: 14px;
-      align-items: stretch;
-    }
-    .principal-photo{
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      background: #fff;
-      box-shadow: var(--shadow2);
-      overflow: hidden;
-      position: relative;
-      min-height: 360px;
-      display:flex;
-      align-items:flex-end;
-      justify-content:center;
-    }
-    .principal-photo img{
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .card small{
       display:block;
+      color:rgba(30,58,138,.9);
+      font-size:11px;
+      letter-spacing:.4px;
+      margin-bottom:8px;
     }
-    .principal-badge{
-      position:absolute;
-      top: 14px;
-      left: 14px;
-      display:inline-flex;
-      align-items:center;
-      gap: 10px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.85);
-      color: var(--muted);
-      font-size: 13px;
-    }
-    .principal-badge i{
-      width: 8px; height: 8px; border-radius: 999px;
-      background: var(--accent2);
-      box-shadow: 0 0 0 6px rgba(30,58,138,.10);
-    }
-    .principal-info h3{
-      margin: 0 0 10px;
-      font-size: 18px;
-      letter-spacing: .2px;
-    }
-    .principal-sub{
-      margin: 0 0 12px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.75;
-    }
-    .chips{
-      display:flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-    }
-    .chip{
-      font-size: 12px;
-      color: rgba(15,23,42,.82);
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.75);
-      padding: 7px 10px;
-      border-radius: 999px;
-    }
+    .card b{display:block; margin-bottom:6px; font-size:14px;}
+    .card p{margin:0; color:var(--muted); font-size:12.5px; line-height:1.7;}
 
-    /* CONTACT */
+    /* Framework */
+    .framework{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background:#fff;
+      padding:16px;
+    }
+    .steps{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:10px;
+      margin-top:10px;
+    }
+    .step{
+      grid-column: span 3;
+      border:1px solid rgba(15,23,42,.10);
+      border-radius: 12px;
+      background: var(--soft);
+      padding:12px;
+      min-height: 96px;
+    }
+    .step .n{
+      font-size:11px;
+      color:rgba(249,115,22,.95);
+      letter-spacing:.4px;
+      margin-bottom:6px;
+    }
+    .step b{display:block; font-size:13px; margin-bottom:6px;}
+    .step span{display:block; color:var(--muted); font-size:12.5px; line-height:1.65;}
+
+    /* Contact */
+    .contact{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background:#fff;
+      padding:16px;
+    }
     .contact-grid{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      align-items: stretch;
+      gap:12px;
+      margin-top:10px;
     }
-    .contact-box{
-      background: rgba(243,246,251,.60);
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 16px;
-      padding: 16px;
+    .cbox{
+      border:1px solid rgba(15,23,42,.10);
+      border-radius: 12px;
+      background: var(--soft);
+      padding:14px;
     }
-    .contact-title{
-      margin: 0 0 10px;
-      font-size: 14px;
-      color: var(--text);
-      font-weight: 750;
-      letter-spacing: .2px;
-    }
-    .qr-wrap{
-      display:flex;
-      gap: 14px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
+    .cbox b{display:block; font-size:13px; margin-bottom:10px;}
     .qr{
-      width: 180px;
-      height: 180px;
-      border-radius: 14px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: #fff;
+      width:160px; height:160px;
+      border-radius: 12px;
+      border:1px solid rgba(15,23,42,.10);
+      background:#fff;
       object-fit: contain;
       display:block;
       cursor: zoom-in;
-      transition: .2s ease;
     }
-    .qr:hover{
-      transform: translateY(-1px);
-      border-color: rgba(249,115,22,.55);
-    }
-    .mini{
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.75;
-    }
+    .mini{margin:10px 0 0; color:var(--muted); font-size:12px; line-height:1.7;}
     .mail{
       display:inline-flex;
-      align-items:center;
-      gap: 10px;
-      padding: 10px 12px;
+      padding:10px 12px;
       border-radius: 999px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.92);
-      font-size: 14px;
-      color: var(--text);
-      transition: .2s ease;
+      border:1px solid rgba(15,23,42,.12);
+      background:#fff;
+      font-size:13px;
       width: fit-content;
     }
-    .mail:hover{ transform: translateY(-1px); border-color: rgba(249,115,22,.55); }
-    .hint{
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.7;
-    }
 
-    /* Modal (QR zoom) */
+    /* Modal */
     .modal{
-      position: fixed;
-      inset: 0;
-      display:none;
-      place-items:center;
+      position:fixed; inset:0;
+      display:none; place-items:center;
       background: rgba(15,23,42,.55);
-      padding: 24px;
-      z-index: 100;
+      padding:20px;
+      z-index:100;
     }
-    .modal[aria-hidden="false"]{ display:grid; }
+    .modal[aria-hidden="false"]{display:grid;}
     .modal-card{
-      width: min(520px, 92vw);
-      background: #fff;
-      border-radius: 18px;
-      border: 1px solid rgba(15,23,42,.10);
-      box-shadow: 0 20px 60px rgba(15,23,42,.25);
-      padding: 16px;
+      width:min(520px, 92vw);
+      background:#fff;
+      border-radius: 16px;
+      border:1px solid rgba(15,23,42,.12);
+      padding:14px;
     }
     .modal-top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap: 12px;
-      padding: 6px 6px 12px;
-      border-bottom: 1px solid rgba(15,23,42,.08);
+      display:flex; justify-content:space-between; align-items:center;
+      padding:4px 4px 10px;
+      border-bottom:1px solid rgba(15,23,42,.08);
+      gap:12px;
     }
-    .modal-top b{ font-size: 14px; }
+    .modal-top b{font-size:13px;}
     .close{
-      border: 1px solid rgba(15,23,42,.12);
-      background: rgba(243,246,251,.85);
+      border:1px solid rgba(15,23,42,.14);
+      background: var(--soft);
       border-radius: 999px;
-      padding: 8px 10px;
-      font-size: 13px;
+      padding:8px 10px;
+      font-size:12px;
       cursor:pointer;
     }
     .modal-img{
-      width: 100%;
-      height: auto;
+      width:100%;
+      height:auto;
       display:block;
-      margin-top: 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(15,23,42,.10);
+      margin-top:12px;
+      border-radius: 12px;
+      border:1px solid rgba(15,23,42,.10);
       background:#fff;
     }
     .modal-note{
-      margin: 10px 2px 0;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.7;
+      margin:10px 2px 0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.7;
     }
 
+    /* Footer */
     footer{
-      padding: 26px 0 40px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 13px;
+      border-top:1px solid var(--line);
+      padding:18px 0 30px;
+      color:var(--muted);
+      font-size:12px;
+      margin-top: 20px;
     }
     .foot{
-      display:flex;
-      justify-content:space-between;
-      gap: 14px;
-      flex-wrap:wrap;
-      align-items:center;
+      display:flex; justify-content:space-between; align-items:center;
+      gap:12px; flex-wrap:wrap;
     }
 
-    /* Responsive */
+    /* Responsive (响应式设计) */
     @media (max-width: 980px){
-      .hero-grid{ grid-template-columns: 1fr; }
-      .card{ grid-column: span 6; }
-      .two-col{ grid-template-columns: 1fr; }
-      .contact-grid{ grid-template-columns: 1fr; }
-      .principal{ grid-template-columns: 1fr; }
-      .navlinks{ display:none; }
+      .navlinks{display:none;}
+      .hero{grid-template-columns:1fr;}
+      .card{grid-column: span 6;}
+      .step{grid-column: span 6;}
+      .contact-grid{grid-template-columns:1fr;}
     }
     @media (max-width: 560px){
-      .card{ grid-column: span 12; }
-      .brand img{ height: 38px; max-width: 150px; }
-      .qr{ width: 168px; height: 168px; }
+      .card{grid-column: span 12;}
+      .step{grid-column: span 12;}
+      .brand img{height:36px; max-width:150px;}
     }
   </style>
 </head>
 
 <body>
-  <div class="grid-bg"></div>
-
-  <header>
-    <div class="wrap">
-      <div class="nav">
-        <a class="brand" href="#top" aria-label="返回顶部">
-          <img src="assets/logo.png" alt="鸿泰咨询 Logo">
-          <div class="name">
-            <span class="cn">鸿泰咨询</span>
-            <span class="en">Hongtai Consulting</span>
-          </div>
-        </a>
-
-        <nav class="navlinks" aria-label="主导航">
-          <a href="#pillars">定位</a>
-          <a href="#services">服务</a>
-          <a href="#approach">方法</a>
-          <a href="#scenes">场景</a>
-          <a href="#principal">首席咨询师</a>
-          <a href="#contact">联系</a>
-        </nav>
-
-        <a class="btn primary" href="#contact">微信/邮件咨询</a>
-      </div>
-    </div>
-  </header>
-
-  <main id="top" class="wrap">
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-grid">
-        <div class="hero-card">
-          <div class="pill"><i></i> Strategy · Evidence · Capability · Solutions</div>
-
-          <h1>
-            用<span style="color:var(--accent)">更清晰的策略</span><br>
-            做<span style="color:var(--accent2)">更稳健的决策</span>
-          </h1>
-
-          <p class="lead">
-            鸿泰咨询聚焦生命科学领域的“决策与落地”：
-            以<strong>策略（Strategy）</strong>牵引方向，以<strong>证据（Evidence）</strong>支撑判断，
-            以<strong>能力（Capability）</strong>沉淀组织复用，交付可执行的<strong>解决方案（Solutions）</strong>。
-          </p>
-
-          <div class="cta">
-            <a class="btn primary" href="#services">查看核心服务</a>
-            <a class="btn" href="#contact">直接联系我</a>
-          </div>
+<header>
+  <div class="wrap">
+    <div class="nav">
+      <a class="brand" href="#top" aria-label="返回顶部">
+        <img src="assets/logo.png" alt="鸿泰咨询 Logo">
+        <div class="meta">
+          <b>鸿泰咨询</b>
+          <span>Hongtai Consulting</span>
         </div>
+      </a>
 
-        <aside class="hero-side" aria-label="关键信息">
-          <div class="metric">
-            <div class="row"><span>定位</span><b>面向决策的咨询与赋能</b></div>
-            <div class="row"><span>交付</span><b>结构化结论 + 可复用资产</b></div>
-            <div class="row"><span>风格</span><b>简洁透明 · 可追溯</b></div>
-            <div class="row"><span>技术应用</span><b>AI 辅助 · 人做判断</b></div>
-          </div>
-          <p class="tagline">
-            你不需要“更长的报告”，你需要的是：问题边界更清楚、判断更稳健、落地更一致。
-          </p>
-        </aside>
-      </div>
-    </section>
+      <nav class="navlinks" aria-label="主导航">
+        <a href="#capabilities">能力</a>
+        <a href="#framework">方法</a>
+        <a href="#contact">联系</a>
+      </nav>
 
-    <!-- PILLARS -->
-    <section id="pillars">
-      <div class="section-title">
-        <div>
-          <h2>四大主轴</h2>
-          <p>以“策略、证据、能力、解决方案”为中心：既说明你是谁，也说明你能交付什么。</p>
-        </div>
-      </div>
-
-      <div class="cards">
-        <div class="card" style="grid-column: span 3;">
-          <div class="kicker"><span class="dot"></span>Strategy</div>
-          <h3>策略牵引</h3>
-          <p>把“方向”说清：目标、边界、优先级与成功标准一致，减少组织内耗。</p>
-        </div>
-
-        <div class="card" style="grid-column: span 3;">
-          <div class="kicker"><span class="dot"></span>Evidence</div>
-          <h3>证据支撑</h3>
-          <p>把“不确定性”说清：证据质量、缺口性质与决策风险，一目了然。</p>
-        </div>
-
-        <div class="card" style="grid-column: span 3;">
-          <div class="kicker"><span class="dot"></span>Capability</div>
-          <h3>能力沉淀</h3>
-          <p>把“个人经验”变成“组织能力”：方法、模板、工具与训练可复用。</p>
-        </div>
-
-        <div class="card" style="grid-column: span 3;">
-          <div class="kicker"><span class="dot"></span>Solutions</div>
-          <h3>解决方案落地</h3>
-          <p>把“结论”变成“行动”：路线、里程碑、节奏与风险应对，能执行。</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- SERVICES -->
-    <section id="services">
-      <div class="section-title">
-        <div>
-          <h2>Core Services</h2>
-          <p>聚焦“判断”与“落地”两类关键交付：既解决当下问题，也沉淀未来复用。</p>
-        </div>
-      </div>
-
-      <div class="cards">
-        <div class="card" style="grid-column: span 6;">
-          <div class="kicker"><span class="dot"></span>01 / Solutions</div>
-          <h3>Decision Support Solutions</h3>
-          <p>
-            围绕关键决策问题提供端到端支持：澄清问题边界、建立评价框架、形成可解释结论与可执行建议。
-            输出强调“可沟通、可落地、可复用”。
-          </p>
-        </div>
-
-        <div class="card" style="grid-column: span 6;">
-          <div class="kicker"><span class="dot"></span>02 / Capability</div>
-          <h3>Capability Development</h3>
-          <p>
-            通过训练 + 工具 + 模板资产沉淀，提升团队在证据分析、策略判断与项目推进上的系统能力，
-            让能力成为组织的长期优势。
-          </p>
-        </div>
-
-        <div class="card">
-          <div class="kicker"><span class="dot"></span>03 / Evidence</div>
-          <h3>Evidence Review & Insight</h3>
-          <p>结构化评估现有证据、识别缺口与不确定性来源，支持稳健判断与风险管理。</p>
-        </div>
-
-        <div class="card">
-          <div class="kicker"><span class="dot"></span>04 / Strategy</div>
-          <h3>Medical Strategy Support</h3>
-          <p>将策略转为可执行计划：核心信息、年度节奏、关键里程碑与协同机制。</p>
-        </div>
-
-        <div class="card">
-          <div class="kicker"><span class="dot"></span>05 / Execution</div>
-          <h3>Program Enablement</h3>
-          <p>多项目并行的工具化支持：优先级、节奏管理、风险预警与复盘机制。</p>
-        </div>
-
-        <div class="card">
-          <div class="kicker"><span class="dot"></span>06 / AI</div>
-          <h3>AI-Enabled Workflow</h3>
-          <p>在合适边界内引入 AI：检索、结构化、摘要与一致性提升；保留人工判断与可追溯记录。</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- APPROACH -->
-    <section id="approach">
-      <div class="section-title">
-        <div>
-          <h2>How We Work</h2>
-          <p>高端与科技感不靠炫技，而靠结构：输入清晰、判断透明、输出可复用。</p>
-        </div>
-      </div>
-
-      <div class="two-col">
-        <div class="panel">
-          <h3 style="margin:0 0 8px;">交付原则</h3>
-          <ul class="list">
-            <li><b>决策优先：</b>先回答“要不要做 / 做什么 / 先做哪个”。</li>
-            <li><b>结构化表达：</b>用框架、清单与示例替代长篇文字。</li>
-            <li><b>可复用资产：</b>模板与工具沉淀为团队能力与组织资产。</li>
-            <li><b>技术克制：</b>AI 提效，但不替代专业结论与责任边界。</li>
-          </ul>
-        </div>
-
-        <div class="panel">
-          <h3 style="margin:0 0 8px;">典型流程（示例）</h3>
-          <ul class="list">
-            <li><b>对齐决策问题：</b>明确场景、目标、约束与成功标准。</li>
-            <li><b>搭建分析框架：</b>建立评价维度与证据需求结构。</li>
-            <li><b>形成判断结论：</b>给出结论、前提条件与关键不确定性。</li>
-            <li><b>输出可执行建议：</b>路线、优先级、里程碑与风险应对。</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- SCENES -->
-    <section id="scenes">
-      <div class="section-title">
-        <div>
-          <h2>Where It Fits</h2>
-          <p>适用于需要“更快支持决策 + 更稳定落地”的场景（示例）。</p>
-        </div>
-      </div>
-
-      <div class="cards">
-        <div class="card" style="grid-column: span 4;">
-          <h3>策略形成与校准</h3>
-          <p>策略方向已明确，但证据支撑与优先级不清，需要结构化判断与取舍。</p>
-        </div>
-
-        <div class="card" style="grid-column: span 4;">
-          <h3>多方案对比与选择</h3>
-          <p>多种选项并行，需在现实约束下明确路径、节奏与资源配置逻辑。</p>
-        </div>
-
-        <div class="card" style="grid-column: span 4;">
-          <h3>能力体系化建设</h3>
-          <p>希望把“个人经验”变成“组织能力”：形成方法、模板、工具与训练闭环。</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- PRINCIPAL -->
-    <section id="principal">
-      <div class="section-title">
-        <div>
-          <h2>首席咨询师</h2>
-          <p>咨询的本质是“可信赖的判断力”。以可追溯的方法与长期一线经验，为关键决策提供支撑。</p>
-        </div>
-      </div>
-
-      <div class="principal">
-        <div class="principal-photo" aria-label="首席咨询师照片">
-          <div class="principal-badge"><i></i> Principal Consultant</div>
-          <img src="assets/jpj2025.png" alt="贾鹏剑 首席咨询师" loading="lazy">
-        </div>
-
-        <div class="panel principal-info">
-          <h3>贾鹏剑</h3>
-          <p class="principal-sub">
-            三十年医药行业从业经验，曾任职于山东省医药公司、辉瑞公司、百时美施贵宝公司。
-            在医学事务领域深耕二十年，覆盖 MSL、MSL Manager 与医学赋能负责人等关键角色。
-          </p>
-          <p class="principal-sub" style="margin-bottom:0;">
-            强项聚焦于：医学沟通与洞察转化、学术演讲与合规、团队辅导与绩效管理、数智化应用与数据分析。
-            强调以策略牵引、以证据支撑、以能力沉淀，将复杂问题结构化为可判断、可执行、可复用的解决方案。
-          </p>
-
-          <div class="chips" aria-label="能力标签">
-            <span class="chip">医学卓越（Medical Excellence）</span>
-            <span class="chip">医学培训与赋能</span>
-            <span class="chip">医学效能与绩效管理</span>
-            <span class="chip">医学沟通与洞察</span>
-            <span class="chip">合规与质量</span>
-            <span class="chip">数智化应用与数据分析</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section id="contact">
-      <div class="section-title">
-        <div>
-          <h2>Contact</h2>
-          <p>你可以先用微信（首选）快速对齐需求；若需发送材料/正式文件，可用邮箱。</p>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="contact-grid">
-          <!-- WeChat -->
-          <div class="contact-box">
-            <div class="contact-title">微信咨询（首选）</div>
-            <div class="qr-wrap">
-              <img class="qr" id="qrThumb" src="assets/wechat.png" alt="微信二维码" loading="lazy">
-              <p class="mini">
-                扫码添加后请备注：<b>公司/角色/需求</b><br>
-                例如：<span style="color:var(--text); font-weight:700;">“XX药企 / MA / 证据评估与策略支持”</span><br><br>
-                <span style="color:var(--muted);">
-                  回复边界：工作日 9:00–18:00 优先回复；紧急事项请在首句标注【紧急】。
-                </span><br>
-                <span style="color:var(--muted); font-size:12px;">（点击二维码可放大）</span>
-              </p>
-            </div>
-          </div>
-
-          <!-- Email -->
-          <div class="contact-box">
-            <div class="contact-title">邮箱（材料/正式文件）</div>
-
-            <a class="mail"
-               href="mailto:contact@hongtaiconsult.com?subject=%E9%B8%BF%E6%B3%B0%E5%92%A8%E8%AF%A2%20%7C%20%E5%90%88%E4%BD%9C%E5%92%A8%E8%AF%A2&body=%E5%85%AC%E5%8F%B8%2F%E8%A7%92%E8%89%B2%EF%BC%9A%0A%E5%86%B3%E7%AD%96%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E6%97%B6%E9%97%B4%E7%AA%97%E5%8F%A3%EF%BC%9A%0A%E7%8E%B0%E6%9C%89%E6%9D%90%E6%96%99%EF%BC%9A%0A%E6%9C%9F%E6%9C%9B%E4%BA%A4%E4%BB%98%EF%BC%9A%0A">
-              contact@hongtaiconsult.com
-            </a>
-
-            <div class="hint">
-              为了更快进入有效沟通，建议包含：TA/产品、决策问题、时间窗口、现有材料、期望交付。<br>
-              （邮箱不做即时沟通入口，微信优先。）
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <footer>
-      <div class="foot">
-        <div>© 2025–2026 Hongtai Consulting</div>
-        <div>Strategy · Evidence · Capability · Solutions</div>
-      </div>
-    </footer>
-  </main>
-
-  <!-- QR Zoom Modal -->
-  <div class="modal" id="qrModal" aria-hidden="true" role="dialog" aria-label="微信二维码放大">
-    <div class="modal-card">
-      <div class="modal-top">
-        <b>微信二维码（扫码添加）</b>
-        <button class="close" id="qrClose" type="button">关闭</button>
-      </div>
-      <img class="modal-img" src="assets/wechat.png" alt="微信二维码 放大">
-      <div class="modal-note">添加请备注：公司 / 角色 / 需求。工作日 9:00–18:00 优先回复。</div>
+      <a class="btn primary" href="#contact">联系咨询</a>
     </div>
   </div>
+</header>
 
-  <script>
-    // QR modal
-    (function(){
-      const thumb = document.getElementById('qrThumb');
-      const modal = document.getElementById('qrModal');
-      const close = document.getElementById('qrClose');
+<main id="top" class="wrap">
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <h1>结构化决策支持与能力建设</h1>
+      <p class="sub">
+        面向生命科学领域，围绕关键决策问题提供支持：明确问题边界与评价标准，评估证据强度与不确定性，
+        输出可沟通、可执行、可复用的判断与交付。
+      </p>
 
-      function open(){
-        modal.setAttribute('aria-hidden','false');
-        document.body.style.overflow = 'hidden';
-      }
-      function hide(){
-        modal.setAttribute('aria-hidden','true');
-        document.body.style.overflow = '';
-      }
+      <div class="tagsline" aria-label="四类能力">
+        <span class="tag"><b style="color:var(--text); font-weight:700;">策略定义</b>（Strategy）</span>
+        <span class="tag"><b style="color:var(--text); font-weight:700;">证据评估</b>（Evidence）</span>
+        <span class="tag"><b style="color:var(--text); font-weight:700;">能力建设</b>（Capability）</span>
+        <span class="tag"><b style="color:var(--text); font-weight:700;">方案落地</b>（Solutions）</span>
+      </div>
 
-      if(thumb){
-        thumb.addEventListener('click', open);
-        thumb.addEventListener('keypress', (e)=>{ if(e.key === 'Enter') open(); });
-        thumb.setAttribute('tabindex','0');
-        thumb.setAttribute('role','button');
-        thumb.setAttribute('aria-label','点击放大二维码');
-      }
-      if(close) close.addEventListener('click', hide);
-      modal.addEventListener('click', (e)=>{ if(e.target === modal) hide(); });
-      window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && modal.getAttribute('aria-hidden')==='false') hide(); });
-    })();
-  </script>
+      <a class="btn primary" href="#contact">微信/邮件联系</a>
+
+      <div class="english">Strategy · Evidence · Capability · Solutions</div>
+    </div>
+
+    <aside class="hero-side" aria-label="关键信息">
+      <div class="row"><span>定位</span><b>结构化决策支持</b></div>
+      <div class="row"><span>交付</span><b>结论 + 依据 + 可复用资产</b></div>
+      <div class="row"><span>方式</span><b>克制 · 清晰 · 可追溯</b></div>
+      <p class="note">适用于需要明确取舍与优先级、降低不确定性、推动落地一致性的关键节点。</p>
+    </aside>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CAPABILITIES -->
+  <section id="capabilities">
+    <div class="stitle">
+      <h2>核心能力</h2>
+      <p>以四类能力覆盖从“定义问题”到“形成行动”的关键链条，表达克制、结构清晰。</p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <small>Strategy</small>
+        <b>策略定义</b>
+        <p>明确目标、边界、优先级与成功标准，统一决策口径。</p>
+      </div>
+
+      <div class="card">
+        <small>Evidence</small>
+        <b>证据评估</b>
+        <p>评估证据质量与缺口性质，呈现关键不确定性及其含义。</p>
+      </div>
+
+      <div class="card">
+        <small>Capability</small>
+        <b>能力建设</b>
+        <p>将方法、模板与工具转化为可复用资产与训练路径。</p>
+      </div>
+
+      <div class="card">
+        <small>Solutions</small>
+        <b>方案落地</b>
+        <p>把判断转化为可执行路径：里程碑、节奏、资源与风险应对。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FRAMEWORK -->
+  <section id="framework">
+    <div class="stitle">
+      <h2>方法框架</h2>
+      <p>以“判断”为中心的最小闭环：输入清晰、逻辑透明、输出可复用。</p>
+    </div>
+
+    <div class="framework">
+      <div style="color:var(--muted); font-size:13px; line-height:1.7;">
+        典型交付以关键决策问题为起点：先对齐判断边界，再建立评价透镜，
+        将证据强度与不确定性结构化呈现，最终输出取舍、优先级与可执行路径。
+      </div>
+
+      <div class="steps" aria-label="四步方法">
+        <div class="step">
+          <div class="n">01</div>
+          <b>对齐边界</b>
+          <span>场景、目标、约束与成功标准</span>
+        </div>
+        <div class="step">
+          <div class="n">02</div>
+          <b>建立透镜</b>
+          <span>评价维度与证据需求结构</span>
+        </div>
+        <div class="step">
+          <div class="n">03</div>
+          <b>评估证据</b>
+          <span>强度/缺口/不确定性及决策含义</span>
+        </div>
+        <div class="step">
+          <div class="n">04</div>
+          <b>转化行动</b>
+          <span>取舍、优先级与可执行路径</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="stitle">
+      <h2>联系</h2>
+      <p>微信优先用于快速对齐需求；材料与正式文件可通过邮箱发送。</p>
+    </div>
+
+    <div class="contact">
+      <div class="contact-grid">
+        <div class="cbox">
+          <b>微信（首选）</b>
+          <img class="qr" id="qrThumb" src="assets/wechat.png" alt="微信二维码" loading="lazy">
+          <p class="mini">
+            添加请备注：公司 / 角色 / 需求。<br>
+            工作日 9:00–18:00 优先回复（紧急事项请在首句标注【紧急】）。
+          </p>
+        </div>
+
+        <div class="cbox">
+          <b>邮箱（材料/正式文件）</b>
+          <a class="mail"
+             href="mailto:contact@hongtaiconsult.com?subject=%E9%B8%BF%E6%B3%B0%E5%92%A8%E8%AF%A2%20%7C%20%E5%90%88%E4%BD%9C%E5%92%A8%E8%AF%A2&body=%E5%85%AC%E5%8F%B8%2F%E8%A7%92%E8%89%B2%EF%BC%9A%0A%E5%86%B3%E7%AD%96%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E6%97%B6%E9%97%B4%E7%AA%97%E5%8F%A3%EF%BC%9A%0A%E7%8E%B0%E6%9C%89%E6%9D%90%E6%96%99%EF%BC%9A%0A%E6%9C%9F%E6%9C%9B%E4%BA%A4%E4%BB%98%EF%BC%9A%0A">
+            contact@hongtaiconsult.com
+          </a>
+          <p class="mini" style="margin-top:10px;">
+            建议包含：TA/产品、决策问题、时间窗口、现有材料、期望交付。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot">
+      <div>© 2025–2026 Hongtai Consulting</div>
+      <div>结构化决策支持与能力建设</div>
+    </div>
+  </footer>
+</main>
+
+<!-- QR Zoom Modal -->
+<div class="modal" id="qrModal" aria-hidden="true" role="dialog" aria-label="微信二维码放大">
+  <div class="modal-card">
+    <div class="modal-top">
+      <b>微信二维码（扫码添加）</b>
+      <button class="close" id="qrClose" type="button">关闭</button>
+    </div>
+    <img class="modal-img" src="assets/wechat.png" alt="微信二维码 放大">
+    <div class="modal-note">添加请备注：公司 / 角色 / 需求。</div>
+  </div>
+</div>
+
+<script>
+  (function(){
+    const thumb = document.getElementById('qrThumb');
+    const modal = document.getElementById('qrModal');
+    const close = document.getElementById('qrClose');
+
+    function open(){
+      modal.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+    }
+    function hide(){
+      modal.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    }
+
+    if(thumb){
+      thumb.addEventListener('click', open);
+      thumb.addEventListener('keypress', (e)=>{ if(e.key === 'Enter') open(); });
+      thumb.setAttribute('tabindex','0');
+      thumb.setAttribute('role','button');
+      thumb.setAttribute('aria-label','点击放大二维码');
+    }
+    close && close.addEventListener('click', hide);
+    modal.addEventListener('click', (e)=>{ if(e.target === modal) hide(); });
+    window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && modal.getAttribute('aria-hidden')==='false') hide(); });
+  })();
+</script>
 </body>
 </html>
