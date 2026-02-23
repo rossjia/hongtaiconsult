@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <title>鸿泰咨询 | Hongtai Consulting</title>
-  <meta name="description" content="鸿泰咨询面向生命科学领域提供结构化的决策支持与能力建设：策略定义、证据评估、能力建设、解决方案落地。" />
+  <meta name="description" content="鸿泰咨询面向生命科学领域提供结构化的决策支持与能力建设：医学策略、证据评估与生成、能力建设、方案落地。" />
 
   <!-- Canonical -->
   <link rel="canonical" href="https://hongtaiconsult.com/" />
@@ -21,7 +21,7 @@
   <!-- Open Graph (minimal) -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="鸿泰咨询 | Hongtai Consulting" />
-  <meta property="og:description" content="结构化决策支持与能力建设｜策略定义 · 证据评估 · 能力建设 · 解决方案落地" />
+  <meta property="og:description" content="医学策略 · 证据评估 · 能力建设 · 方案落地｜结构化支持关键决策与执行" />
   <meta property="og:url" content="https://hongtaiconsult.com/" />
 
   <!-- Google tag (gtag.js) - GA4 -->
@@ -45,6 +45,7 @@
       --muted:#475569;
       --line:rgba(15,23,42,.12);
       --soft:#f6f7fb;
+      --soft2:#f8fafc;
 
       --max: 1080px;
       --radius: 14px;
@@ -59,7 +60,8 @@
       background:var(--bg);
       color:var(--ink);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "PingFang SC", "Microsoft YaHei", Arial;
-      line-height:1.7;
+      font-size:16px;
+      line-height:1.85;
     }
     a{color:inherit;text-decoration:none;}
     img{max-width:100%;display:block;}
@@ -91,20 +93,20 @@
       min-width:260px;
     }
     .brand img{
-      height:38px; width:auto; max-width:170px;
+      height:44px; width:auto; max-width:190px;
       object-fit:contain;
     }
     .brand .meta{display:flex; flex-direction:column; line-height:1.05;}
-    .brand .meta b{font-size:15px; letter-spacing:.2px;}
-    .brand .meta span{font-size:12px; color:var(--muted); margin-top:4px; letter-spacing:.6px;}
+    .brand .meta b{font-size:16.5px; letter-spacing:.2px;}
+    .brand .meta span{font-size:13px; color:var(--muted); margin-top:4px; letter-spacing:.6px;}
 
     nav.links{
       display:flex; align-items:center; gap:18px;
-      font-size:13px; color:var(--muted);
+      font-size:14px; color:var(--muted);
       white-space:nowrap;
     }
     nav.links a{
-      padding:8px 8px; border-radius:10px;
+      padding:8px 10px; border-radius:10px;
     }
     nav.links a:hover{background:var(--soft); color:var(--ink);}
 
@@ -114,7 +116,7 @@
       border-radius:999px;
       border:1px solid var(--line);
       background:#fff;
-      font-size:13px;
+      font-size:13.5px;
       white-space:nowrap;
       transition: transform .12s ease, background .12s ease, border-color .12s ease;
     }
@@ -129,9 +131,9 @@
     }
 
     /* Layout */
-    main{padding:34px 0 18px;}
+    main{padding:28px 0 18px;}
     section{padding:34px 0;}
-    .divider{border-top:1px solid var(--line); margin:12px 0;}
+    .divider{border-top:1px solid var(--line); margin:14px 0;}
 
     .section-head{
       display:flex; justify-content:space-between; align-items:flex-end;
@@ -154,84 +156,102 @@
     .section-head p{
       margin:0;
       color:var(--muted);
-      font-size:13px;
-      max-width:88ch;
-      line-height:1.75;
+      font-size:14px;
+      max-width:92ch;
+      line-height:1.85;
+    }
+
+    /* Section surface */
+    .surface{
+      background: var(--soft2);
+      border:1px solid rgba(15,23,42,.06);
+      border-radius: 18px;
+      padding: 26px 16px;
     }
 
     /* HERO */
     .hero{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:22px;
-      align-items:start;
-      padding-top:10px;
+      border-radius: 18px;
+      padding: 22px 16px;
+      background: linear-gradient(135deg, rgba(50,71,132,.09), rgba(230,116,51,.05));
+      border:1px solid rgba(15,23,42,.08);
     }
     h1{
       margin:0 0 10px;
-      font-size: clamp(26px, 3.6vw, 40px);
+      font-size: clamp(24px, 3.2vw, 40px);
       letter-spacing:-.4px;
       line-height:1.18;
     }
-    .hl{
-      color: var(--brand-orange);
-      font-weight:800;
-    }
+    .h-blue{color: var(--brand-blue); font-weight:800;}
+    .h-dot{color: rgba(15,23,42,.35); font-weight:600;}
     .lead{
       margin:0 0 14px;
       color:var(--muted);
-      font-size:15px;
-      max-width:78ch;
+      font-size:16px;
+      max-width:86ch;
     }
-    .pillars{
-      display:flex; flex-wrap:wrap; gap:10px;
-      margin-top:14px;
-    }
-    .pill{
-      padding:7px 10px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:#fff;
-      font-size:12px;
-      color:var(--muted);
-    }
-    .pill b{color:var(--ink); font-weight:700;}
     .subbrand{
-      margin-top:10px;
-      font-size:12px;
+      margin-top:8px;
+      font-size:12.5px;
       color:var(--muted);
       letter-spacing:.7px;
     }
-
-    .hero-card{
-      border:1px solid var(--line);
-      border-radius: var(--radius);
-      background:#fff;
-      padding:14px;
-      box-shadow: 0 10px 22px rgba(2,6,23,.04);
-    }
-    .kv{
+    .bullets{
+      margin:12px 0 0;
+      padding:0;
+      list-style:none;
       display:grid;
       gap:10px;
+      max-width:86ch;
     }
-    .kv .row{
-      display:flex; justify-content:space-between; gap:14px;
-      padding:10px 10px;
-      border:1px solid rgba(15,23,42,.10);
-      border-radius:12px;
-      background: var(--soft);
-      font-size:13px;
-      color:var(--muted);
+    .bullets li{
+      display:flex; gap:10px; align-items:flex-start;
+      padding:10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.78);
+      border:1px solid rgba(15,23,42,.08);
+      box-shadow: 0 10px 22px rgba(2,6,23,.04);
+      color: var(--muted);
+      font-size:14.5px;
+      line-height:1.75;
     }
-    .kv .row b{color:var(--ink); font-weight:700;}
-    .hero-note{
-      margin:10px 0 0;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.7;
+    .tick{
+      width:18px; height:18px;
+      border-radius: 6px;
+      background: rgba(230,116,51,.16);
+      border:1px solid rgba(230,116,51,.22);
+      margin-top:2px;
+      flex: 0 0 auto;
+      position:relative;
+    }
+    .tick:after{
+      content:"";
+      position:absolute;
+      left:5px; top:4px;
+      width:6px; height:10px;
+      border-right:2px solid rgba(230,116,51,.95);
+      border-bottom:2px solid rgba(230,116,51,.95);
+      transform: rotate(40deg);
+    }
+    .bullets b{color: var(--ink); font-weight:800;}
+
+    .hero-proof{
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.78);
+      border:1px solid rgba(15,23,42,.08);
+      box-shadow: 0 10px 22px rgba(2,6,23,.04);
+      max-width: 92ch;
+    }
+    .proof{
+      margin:0;
+      color: var(--muted);
+      font-size:14.5px;
+      line-height:1.85;
     }
 
-    /* Capabilities (minimal, expandable) */
+    /* Capabilities (expandable) */
     .cap-grid{
       display:grid;
       grid-template-columns: repeat(12, 1fr);
@@ -267,7 +287,7 @@
       display:flex; align-items:baseline; justify-content:space-between; gap:10px;
     }
     .cap-top small{
-      color: rgba(50,71,132,.9);
+      color: rgba(50,71,132,.92);
       font-size:11px;
       letter-spacing:.4px;
     }
@@ -276,23 +296,52 @@
       font-size:11px;
     }
     .cap-title{
-      font-size:14px;
-      font-weight:800;
+      font-size:14.5px;
+      font-weight:900;
       margin:0;
     }
     .cap-one{
       margin:0;
       color:var(--muted);
-      font-size:12.5px;
-      line-height:1.65;
+      font-size:14px;
+      line-height:1.75;
     }
     .cap-more{
       margin:10px 0 0;
       color:var(--muted);
-      font-size:12.5px;
-      line-height:1.7;
+      font-size:14px;
+      line-height:1.8;
       padding-top:10px;
       border-top:1px dashed rgba(15,23,42,.16);
+    }
+
+    /* Scenes */
+    .scene-grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:12px;
+      margin-top:12px;
+    }
+    .scene{
+      grid-column: span 6;
+      border:1px solid rgba(15,23,42,.10);
+      border-radius: 16px;
+      background:#fff;
+      padding:14px;
+      box-shadow: 0 10px 22px rgba(2,6,23,.04);
+      min-height: 96px;
+    }
+    .scene b{
+      display:block;
+      font-size:14.5px;
+      letter-spacing:.2px;
+      margin-bottom:6px;
+    }
+    .scene span{
+      display:block;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.8;
     }
 
     /* Framework */
@@ -306,8 +355,8 @@
     .frame-lead{
       margin:0;
       color:var(--muted);
-      font-size:13px;
-      line-height:1.8;
+      font-size:14.5px;
+      line-height:1.9;
     }
     .steps{
       display:grid;
@@ -328,20 +377,44 @@
       letter-spacing:.4px;
       color: rgba(230,116,51,.98);
       margin-bottom:6px;
-      font-weight:800;
+      font-weight:900;
     }
     .step b{
       display:block;
-      font-size:13px;
+      font-size:13.5px;
       margin-bottom:6px;
       letter-spacing:.2px;
     }
     .step span{
       display:block;
       color:var(--muted);
-      font-size:12.5px;
-      line-height:1.65;
+      font-size:14px;
+      line-height:1.7;
     }
+
+    /* Deliverables */
+    .deliver{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background:#fff;
+      padding:16px;
+      box-shadow: 0 10px 22px rgba(2,6,23,.04);
+    }
+    .deliver-grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:10px;
+      margin-top:12px;
+    }
+    .ditem{
+      grid-column: span 4;
+      border:1px solid rgba(15,23,42,.10);
+      border-radius: 14px;
+      background: var(--soft);
+      padding:12px;
+    }
+    .ditem b{display:block; font-size:13.5px; margin-bottom:6px; letter-spacing:.2px;}
+    .ditem span{display:block; color:var(--muted); font-size:14px; line-height:1.75;}
 
     /* Contact */
     .contact{
@@ -363,7 +436,7 @@
       background: var(--soft);
       padding:14px;
     }
-    .cbox b{display:block; font-size:13px; margin-bottom:10px;}
+    .cbox b{display:block; font-size:13.5px; margin-bottom:10px;}
     .qr{
       width:160px; height:160px;
       border-radius: 12px;
@@ -372,14 +445,14 @@
       object-fit: contain;
       cursor: zoom-in;
     }
-    .mini{margin:10px 0 0; color:var(--muted); font-size:12px; line-height:1.75;}
+    .mini{margin:10px 0 0; color:var(--muted); font-size:13.5px; line-height:1.75;}
     .mail{
       display:inline-flex;
       padding:10px 12px;
       border-radius: 999px;
       border:1px solid rgba(15,23,42,.12);
       background:#fff;
-      font-size:13px;
+      font-size:13.5px;
       width: fit-content;
     }
 
@@ -406,13 +479,13 @@
       border-bottom:1px solid rgba(15,23,42,.08);
       gap:12px;
     }
-    .modal-top b{font-size:13px;}
+    .modal-top b{font-size:13.5px;}
     .close{
       border:1px solid rgba(15,23,42,.14);
       background: var(--soft);
       border-radius: 999px;
       padding:8px 10px;
-      font-size:12px;
+      font-size:12.5px;
       cursor:pointer;
     }
     .modal-img{
@@ -427,7 +500,7 @@
     .modal-note{
       margin:10px 2px 0;
       color:var(--muted);
-      font-size:12px;
+      font-size:13.5px;
       line-height:1.75;
     }
 
@@ -436,7 +509,7 @@
       border-top:1px solid var(--line);
       padding:18px 0 30px;
       color:var(--muted);
-      font-size:12px;
+      font-size:12.5px;
       margin-top: 18px;
     }
     .foot{
@@ -447,16 +520,17 @@
     /* Responsive */
     @media (max-width: 980px){
       nav.links{display:none;}
-      .hero{grid-template-columns:1fr;}
+      .section-head{flex-direction:column; align-items:flex-start;}
       details.cap{grid-column: span 6;}
       .step{grid-column: span 6;}
+      .scene{grid-column: span 12;}
+      .ditem{grid-column: span 12;}
       .contact-grid{grid-template-columns:1fr;}
-      .section-head{flex-direction:column; align-items:flex-start;}
     }
     @media (max-width: 560px){
       details.cap{grid-column: span 12;}
       .step{grid-column: span 12;}
-      .brand img{height:36px; max-width:150px;}
+      .brand img{height:40px; max-width:170px;}
     }
 
     /* Reduced motion */
@@ -483,12 +557,13 @@
       </a>
 
       <nav class="links" aria-label="主导航">
+        <a href="#scenarios">场景</a>
+        <a href="#deliverables">输出</a>
         <a href="#capabilities">能力</a>
         <a href="#framework">方法</a>
-        <a href="#contact">联系</a>
       </nav>
 
-      <!-- Single CTA (sticky) -->
+      <!-- CTA -->
       <a class="btn primary" href="#contact" aria-label="跳转到联系">联系咨询</a>
     </div>
   </div>
@@ -497,41 +572,64 @@
 <main id="main" class="wrap">
   <!-- HERO -->
   <section id="top" class="hero" aria-label="首页概览">
-    <div>
-      <h1>结构化<span class="hl">决策</span>支持与能力建设</h1>
-      <p class="lead">
-        面向生命科学领域，围绕关键决策问题提供支持：对齐问题边界与评价标准，评估证据强度与不确定性，
-        输出可沟通、可执行、可复用的判断与交付。
+    <h1>
+      <span class="h-blue">医学策略</span> <span class="h-dot">·</span>
+      <span class="h-blue">证据评估</span> <span class="h-dot">·</span>
+      <span class="h-blue">能力建设</span> <span class="h-dot">·</span>
+      <span class="h-blue">方案落地</span>
+    </h1>
+
+    <p class="lead">
+      面向生命科学领域的医学事务工作场景，围绕关键周期与关键项目提供<span style="color:var(--brand-blue); font-weight:700;">结构化支持</span>：
+      对齐策略与判断口径，评估证据强度与不确定性，并将结论转化为可执行的路径与资产。
+    </p>
+
+    <div class="hero-proof" aria-label="关于我们">
+      <p class="proof">
+        鸿泰咨询专注生命科学领域的医学事务工作场景，覆盖从<span style="color:var(--brand-blue); font-weight:700;">策略形成</span>到<span style="color:var(--brand-blue); font-weight:700;">证据判断与生成规划</span>，再到<span style="color:var(--brand-blue); font-weight:700;">能力补位与沉淀</span>及<span style="color:var(--brand-blue); font-weight:700;">方案落地推进</span>的关键链条。
+        我们擅长把复杂问题拆解为可对齐的判断口径与工作路径，让结论、依据与限制保持透明，便于跨团队沟通与持续推进。
       </p>
-
-      <!-- One-time pillar line (no extra CTA here) -->
-      <div class="pillars" aria-label="四类能力标签">
-        <span class="pill"><b>策略定义</b>（Strategy）</span>
-        <span class="pill"><b>证据评估</b>（Evidence）</span>
-        <span class="pill"><b>能力建设</b>（Capability）</span>
-        <span class="pill"><b>方案落地</b>（Solutions）</span>
-      </div>
-
-      <div class="subbrand">Strategy · Evidence · Capability · Solutions</div>
     </div>
 
-    <aside class="hero-card" aria-label="定位与交付">
-      <div class="kv">
-        <div class="row"><span>定位</span><b>结构化决策支持</b></div>
-        <div class="row"><span>交付</span><b>结论 + 依据 + 可复用资产</b></div>
-        <div class="row"><span>取向</span><b>克制 · 清晰 · 可追溯</b></div>
-      </div>
-      <p class="hero-note">适用于需要明确取舍与优先级、降低不确定性、推动落地一致性的关键节点。</p>
-    </aside>
+    <div class="subbrand">Strategy · Evidence · Capability · Solutions</div>
   </section>
 
   <div class="divider"></div>
 
-  <!-- CAPABILITIES -->
+  <!-- SCENARIOS -->
+  <section id="scenarios" aria-label="典型场景">
+    <div class="section-head">
+      <h2>典型场景</h2>
+      <p>围绕医学事务关键周期，支持策略形成、证据判断、能力补位与执行推进，帮助团队在明确时间窗口内把工作推进到可交付状态。</p>
+    </div>
+
+    <div class="surface">
+      <div class="scene-grid" aria-label="四类典型场景">
+        <div class="scene">
+          <b>医学策略形成（Strategy）</b>
+          <span>产品/项目进入关键节点，医学主张与优先级尚未收敛；需要对齐目标、边界与成功标准，形成可沟通的判断口径。</span>
+        </div>
+        <div class="scene">
+          <b>证据判断与路径（Evidence）</b>
+          <span>证据积累分散，既要评估强度与缺口，也要在现实约束下取舍证据生成路径；需要明确不确定性及其决策含义。</span>
+        </div>
+        <div class="scene">
+          <b>能力补位与沉淀（Capability）</b>
+          <span>团队经验不均或新人占比高，方法依赖个人；需要在项目推进中提供辅导与模板资产，建立可复用的工作方式。</span>
+        </div>
+        <div class="scene">
+          <b>执行推进与落地（Solutions）</b>
+          <span>跨部门协作复杂、任务并行且节奏紧；需要把判断转化为里程碑、交付物与协作机制，推动一致行动。</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- CAPABILITIES -->
   <section id="capabilities" aria-label="核心能力">
     <div class="section-head">
       <h2>核心能力</h2>
-      <p>不堆砌服务清单。四类能力覆盖从“定义问题”到“形成行动”的关键链条；点击卡片可展开细节。</p>
+      <p>四类方向覆盖从策略形成到执行落地的关键链条；点击卡片可展开细节。</p>
     </div>
 
     <div class="cap-grid">
@@ -541,11 +639,11 @@
             <small>Strategy</small>
             <span class="hint">点击展开</span>
           </div>
-          <p class="cap-title">策略定义</p>
-          <p class="cap-one">明确目标、边界、优先级与成功标准，统一决策口径。</p>
+          <p class="cap-title">医学策略</p>
+          <p class="cap-one">对齐目标、边界、优先级与成功标准，统一医学判断口径。</p>
         </summary>
         <div class="cap-more">
-          常见输出：关键问题拆解、决策口径对齐、优先级与取舍依据、评估维度（Lens）与成功标准。
+          典型支持：关键问题拆解、决策口径对齐、优先级与取舍依据、评价维度（Lens）与成功标准定义。
         </div>
       </details>
 
@@ -559,7 +657,7 @@
           <p class="cap-one">评估证据质量与缺口性质，呈现不确定性及其决策含义。</p>
         </summary>
         <div class="cap-more">
-          常见输出：证据强度与局限、证据缺口分类、关键不确定性清单、风险含义与下一步证据选项。
+          典型支持：证据强度与局限、缺口分类、关键不确定性清单、风险含义与下一步证据选项。
         </div>
       </details>
 
@@ -570,10 +668,10 @@
             <span class="hint">点击展开</span>
           </div>
           <p class="cap-title">能力建设</p>
-          <p class="cap-one">将方法、模板与工具沉淀为团队可复用资产与训练路径。</p>
+          <p class="cap-one">在项目推进中沉淀方法、模板与工具，提升团队可复用能力。</p>
         </summary>
         <div class="cap-more">
-          常见输出：方法框架/模板包、标准化工作流、团队辅导与复盘机制、关键能力评估与提升路径。
+          典型支持：方法框架/模板包、标准化工作流、团队辅导与复盘机制、关键能力评估与提升路径。
         </div>
       </details>
 
@@ -584,10 +682,10 @@
             <span class="hint">点击展开</span>
           </div>
           <p class="cap-title">方案落地</p>
-          <p class="cap-one">把判断转化为可执行路径：里程碑、节奏、资源与风险应对。</p>
+          <p class="cap-one">把判断转化为可执行路径：节奏、里程碑、资源与风险应对。</p>
         </summary>
         <div class="cap-more">
-          常见输出：行动路线图、里程碑与交付物定义、资源与协作机制、关键风险与应对方案。
+          典型支持：行动路线图、里程碑与交付物定义、资源与协作机制、关键风险与应对方案。
         </div>
       </details>
     </div>
@@ -596,36 +694,75 @@
   <!-- FRAMEWORK -->
   <section id="framework" aria-label="方法框架">
     <div class="section-head">
-      <h2>方法框架</h2>
-      <p>以“判断”为中心的最小闭环：输入清晰、逻辑透明、输出可复用。</p>
+      <h2>方法</h2>
+      <p>以关键问题为起点：先对齐边界，再建立评价结构，将证据强度与不确定性透明呈现，最终形成取舍与执行路径。</p>
     </div>
 
-    <div class="frame">
-      <p class="frame-lead">
-        典型交付以关键决策问题为起点：先对齐判断边界，再建立评价透镜，将证据强度与不确定性结构化呈现，
-        最终形成取舍、优先级与可执行路径。
-      </p>
+    <div class="surface">
+      <div class="frame">
+        <p class="frame-lead">
+          典型交付以关键决策问题为起点：对齐场景、目标与约束，明确成功标准与评价维度；
+          结构化呈现证据强度、缺口与不确定性，并把结论转化为优先级与推进路径，确保可沟通、可追溯、可落地。
+        </p>
 
-      <div class="steps" aria-label="四步方法">
-        <div class="step">
-          <div class="n">01</div>
-          <b>对齐边界</b>
-          <span>场景、目标、约束与成功标准</span>
+        <div class="steps" aria-label="四步路径">
+          <div class="step">
+            <div class="n">01</div>
+            <b>对齐边界</b>
+            <span>场景、目标、约束与成功标准</span>
+          </div>
+          <div class="step">
+            <div class="n">02</div>
+            <b>建立评价结构</b>
+            <span>评价维度与证据需求（Lens）</span>
+          </div>
+          <div class="step">
+            <div class="n">03</div>
+            <b>评估证据</b>
+            <span>强度 / 缺口 / 不确定性与决策含义</span>
+          </div>
+          <div class="step">
+            <div class="n">04</div>
+            <b>转化行动</b>
+            <span>取舍、优先级与可执行路径</span>
+          </div>
         </div>
-        <div class="step">
-          <div class="n">02</div>
-          <b>建立透镜</b>
-          <span>评价维度与证据需求结构</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- DELIVERABLES -->
+  <section id="deliverables" aria-label="典型输出">
+    <div class="section-head">
+      <h2>典型输出</h2>
+      <p>输出以“结论 + 依据 + 可复用资产”为原则，便于复盘、沟通与后续推进。</p>
+    </div>
+
+    <div class="deliver">
+      <div class="deliver-grid" aria-label="输出清单">
+        <div class="ditem">
+          <b>策略与口径对齐材料</b>
+          <span>关键问题拆解、边界与成功标准、优先级与取舍依据。</span>
         </div>
-        <div class="step">
-          <div class="n">03</div>
-          <b>评估证据</b>
-          <span>强度/缺口/不确定性及其含义</span>
+        <div class="ditem">
+          <b>证据评估与缺口结论</b>
+          <span>证据强度/局限、不确定性清单、缺口性质及其决策含义。</span>
         </div>
-        <div class="step">
-          <div class="n">04</div>
-          <b>转化行动</b>
-          <span>取舍、优先级与可执行路径</span>
+        <div class="ditem">
+          <b>证据生成选项与路径</b>
+          <span>可选证据方案、优先级建议、节奏与关键里程碑。</span>
+        </div>
+        <div class="ditem">
+          <b>落地推进与协作机制</b>
+          <span>行动路线图、交付物定义、资源与协作安排、风险与应对。</span>
+        </div>
+        <div class="ditem">
+          <b>方法资产与模板包</b>
+          <span>可复用框架、检查清单、工作流与复盘机制（按需）。</span>
+        </div>
+        <div class="ditem">
+          <b>汇报与沟通版本</b>
+          <span>适配不同对象的表达：管理层、跨部门、医学团队内部。</span>
         </div>
       </div>
     </div>
@@ -643,10 +780,7 @@
         <div class="cbox">
           <b>微信（首选）</b>
           <img class="qr" id="qrThumb" src="assets/wechat.png" alt="微信二维码" loading="lazy" />
-          <p class="mini">
-            添加请备注：公司 / 角色 / 需求。<br />
-            工作日 9:00–18:00 优先回复（紧急事项请在首句标注【紧急】）。
-          </p>
+          <p class="mini">添加请备注：公司 / 角色 / 需求。工作日优先回复。</p>
         </div>
 
         <div class="cbox">
