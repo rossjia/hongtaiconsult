@@ -50,10 +50,15 @@ h1 {
   overflow:hidden;
   box-shadow:0 4px 14px rgba(15,118,110,.06);
 }
+.item.drag-ready {
+  border-color:#5fb6aa;
+  box-shadow:0 0 0 3px rgba(15,118,110,.12), 0 10px 24px rgba(15,118,110,.14);
+}
 .item.dragging {
-  opacity:.78;
-  box-shadow:0 12px 28px rgba(15,118,110,.20);
-  transform:scale(1.01);
+  opacity:.82;
+  border-color:#0f766e;
+  box-shadow:0 0 0 3px rgba(15,118,110,.16), 0 14px 30px rgba(15,118,110,.24);
+  transform:scale(1.012);
   z-index:50;
 }
 .item-main {
@@ -63,12 +68,22 @@ h1 {
   gap:6px;
   min-height:58px;
   padding:8px 8px 8px 10px;
-  cursor:grab;
-  touch-action:none;
   user-select:none;
   -webkit-user-select:none;
 }
-.item-main:active { cursor:grabbing; }
+.drag-zone {
+  min-width:0;
+  cursor:grab;
+  touch-action:pan-y;
+  border-radius:8px;
+  padding:4px 2px;
+}
+.drag-zone:active {
+  cursor:grabbing;
+}
+.item.drag-ready .drag-zone {
+  background:rgba(15,118,110,.07);
+}
 .select-box {
   width:20px;
   height:20px;
@@ -124,7 +139,8 @@ h1 {
   color:var(--primary-dark);
   font-size:16px;
   cursor:pointer;
-  touch-action:manipulation;
+  touch-action:pan-y;
+  -webkit-tap-highlight-color:transparent;
 }
 .icon-btn:hover { border-color:var(--primary); }
 .details {
@@ -172,13 +188,23 @@ h1 {
   main { width:calc(100% - 14px); padding-top:13px; }
   h1 { font-size:21px; }
   .item-main {
-    grid-template-columns:28px 36px minmax(0,1fr) 31px 31px 31px;
-    min-height:55px;
-    padding-left:7px;
-    gap:4px;
+    grid-template-columns:28px 36px minmax(0,1fr) 44px;
+    min-height:58px;
+    padding:7px 7px;
+    gap:5px;
   }
   .rank { width:32px; height:32px; }
-  .icon-btn { width:31px; height:31px; }
+  .icon-btn.up,
+  .icon-btn.down {
+    display:none;
+  }
+  .icon-btn.expand {
+    width:44px;
+    height:44px;
+    font-size:20px;
+    border-radius:11px;
+    touch-action:pan-y;
+  }
   .name { font-size:15px; }
 }
 </style>
@@ -186,15 +212,15 @@ h1 {
 <body>
 <main>
   <h1>专业选择与排序</h1>
-  <div class="tip">默认全部选择。取消勾选后，该专业会自动移到最下方并标记为“不考虑”；专业可整体拖动或使用“↑ / ↓”排序。结果保存在当前浏览器，完成后可直接截图分享。</div>
+  <div class="tip">默认全部选择。手机上长按专业名称区域约0.35秒拖动排序；右侧只保留展开箭头，直接上下滑动可滚动页面。</div>
   <div id="list"></div>
 </main>
 <div id="toast" class="toast"></div>
 
 <script>
 const ITEMS = [{"name": "全媒体广告策划与营销", "category": "设计传媒", "options": [{"school": "湖北开放职业学院", "group_code": "C601(01)", "profession_code": "25", "raw_name": "全媒体广告策划与营销", "score25": "-/-", "score24": "287/108266", "tuition": 9800, "plan": 20}]}, {"name": "数字媒体技术", "category": "设计传媒", "options": [{"school": "武汉商贸职业学院", "group_code": "C607(01)", "profession_code": "35", "raw_name": "数字媒体技术 (大一在红安教学改革基地就读，大二起就读武汉校区)", "score25": "-/-", "score24": "334/88931", "tuition": 12000, "plan": 47}, {"school": "武汉光谷职业学院", "group_code": "C611(01)", "profession_code": "20", "raw_name": "数字媒体技术", "score25": "-/-", "score24": "-/-", "tuition": 10200, "plan": 60}]}, {"name": "数字媒体艺术设计", "category": "设计传媒", "options": [{"school": "武昌职业学院", "group_code": "C608(10)", "profession_code": "72", "raw_name": "数字媒体艺术设计", "score25": "-/-", "score24": "296/105123", "tuition": 13600, "plan": 20}, {"school": "湖北商贸学院", "group_code": "C235(04)", "profession_code": "38", "raw_name": "数字媒体艺术设计 (办学地点:武汉校区)", "score25": "-/-", "score24": "-/-", "tuition": 15000, "plan": 40}, {"school": "湖北城市建设职业技术学院 中外合作办学", "group_code": "C560(04)", "profession_code": "35", "raw_name": "数字媒体艺术设计 (中外合作办学)", "score25": "226/134082", "score24": "-/-", "tuition": 16000, "plan": 35}]}, {"name": "新闻采编与制作", "category": "设计传媒", "options": [{"school": "武汉体育学院体育科技学院", "group_code": "C221(03)", "profession_code": "08", "raw_name": "新闻采编与制作", "score25": "267/126601", "score24": "299/104024", "tuition": 13000, "plan": 70}, {"school": "武汉传媒学院", "group_code": "C207(05)", "profession_code": "36", "raw_name": "新闻采编与制作 (融媒体方向;学生就读大悟校区)", "score25": "150/138155", "score24": "378/68245", "tuition": 15000, "plan": 60}]}, {"name": "环境艺术设计", "category": "设计传媒", "options": [{"school": "湖北商贸学院", "group_code": "C235(04)", "profession_code": "36", "raw_name": "环境艺术设计 (办学地点:武汉校区)", "score25": "-/-", "score24": "-/-", "tuition": 15000, "plan": 40}]}, {"name": "电子竞技运动与管理", "category": "设计传媒", "options": [{"school": "武汉光谷职业学院", "group_code": "C611(01)", "profession_code": "39", "raw_name": "电子竞技运动与管理", "score25": "-/-", "score24": "289/107577", "tuition": 9700, "plan": 15}]}, {"name": "视觉传达设计", "category": "设计传媒", "options": [{"school": "湖北商贸学院", "group_code": "C235(04)", "profession_code": "37", "raw_name": "视觉传达设计 (办学地点:武汉校区)", "score25": "-/-", "score24": "-/-", "tuition": 15000, "plan": 50}]}, {"name": "国际经济与贸易", "category": "商贸运营", "options": [{"school": "武汉工商学院", "group_code": "C217(09)", "profession_code": "49", "raw_name": "国际经济与贸易", "score25": "298/117062", "score24": "310/99648", "tuition": 14500, "plan": 10}]}, {"name": "大数据与财务管理", "category": "商贸运营", "options": [{"school": "文华学院", "group_code": "C203(07)", "profession_code": "54", "raw_name": "大数据与财务管理 (办学地点:湖北武汉)", "score25": "-/-", "score24": "258/116236", "tuition": 11500, "plan": 62}]}, {"name": "现代物流管理", "category": "商贸运营", "options": [{"school": "武汉工贸职业学院", "group_code": "C602(01)", "profession_code": "12", "raw_name": "现代物流管理", "score25": "-/-", "score24": "293/106226", "tuition": 9000, "plan": 20}]}, {"name": "电子商务", "category": "商贸运营", "options": [{"school": "武汉工贸职业学院", "group_code": "C602(01)", "profession_code": "11", "raw_name": "电子商务", "score25": "-/-", "score24": "291/106884", "tuition": 11800, "plan": 20}, {"school": "武昌职业学院", "group_code": "C608(10)", "profession_code": "68", "raw_name": "电子商务", "score25": "-/-", "score24": "287/108266", "tuition": 12600, "plan": 20}, {"school": "武汉交通职业学院 乡村振兴计划", "group_code": "C537(09)", "profession_code": "63", "raw_name": "电子商务 (乡村振兴)", "score25": "-/-", "score24": "-/-", "tuition": 5000, "plan": 10}, {"school": "湖北健康职业学院", "group_code": "C612(01)", "profession_code": "21", "raw_name": "电子商务", "score25": "-/-", "score24": "246/118511", "tuition": 11900, "plan": 33}, {"school": "武汉光谷职业学院", "group_code": "C611(01)", "profession_code": "29", "raw_name": "电子商务", "score25": "-/-", "score24": "294/105863", "tuition": 9500, "plan": 70}, {"school": "武汉传媒学院", "group_code": "C207(05)", "profession_code": "38", "raw_name": "电子商务 (智能商务运营方向;学生就读大悟校区)", "score25": "155/138077", "score24": "-/-", "tuition": 15000, "plan": 35}]}, {"name": "网络营销与直播电商", "category": "商贸运营", "options": [{"school": "武汉商贸职业学院", "group_code": "C607(01)", "profession_code": "16", "raw_name": "网络营销与直播电商 (办学地点:武汉校区)", "score25": "-/-", "score24": "328/91715", "tuition": 8800, "plan": 60}, {"school": "湖北职业技术学院 乡村振兴计划", "group_code": "C505(04)", "profession_code": "43", "raw_name": "网络营销与直播电商 (乡村振兴)", "score25": "-/-", "score24": "-/-", "tuition": 5000, "plan": 10}, {"school": "湖北开放职业学院", "group_code": "C601(01)", "profession_code": "23", "raw_name": "网络营销与直播电商", "score25": "-/-", "score24": "264/114895", "tuition": 9800, "plan": 20}, {"school": "武汉工程科技学院", "group_code": "C210(05)", "profession_code": "45", "raw_name": "网络营销与直播电商", "score25": "-/-", "score24": "269/113702", "tuition": 14800, "plan": 137}]}, {"name": "连锁经营与管理", "category": "商贸运营", "options": [{"school": "武汉设计工程学院", "group_code": "C209(05)", "profession_code": "32", "raw_name": "连锁经营与管理 (办学地点:红安教学改革基地)", "score25": "303/115202", "score24": "-/-", "tuition": 13000, "plan": 31}]}, {"name": "旅游管理", "category": "旅游服务", "options": [{"school": "武汉商贸职业学院", "group_code": "C607(01)", "profession_code": "20", "raw_name": "旅游管理 (办学地点:武汉校区)", "score25": "-/-", "score24": "335/88481", "tuition": 8800, "plan": 11}, {"school": "武汉工贸职业学院", "group_code": "C602(01)", "profession_code": "15", "raw_name": "旅游管理", "score25": "-/-", "score24": "-/-", "tuition": 9000, "plan": 15}, {"school": "湖北职业技术学院 乡村振兴计划", "group_code": "C505(04)", "profession_code": "44", "raw_name": "旅游管理 (乡村振兴)", "score25": "-/-", "score24": "-/-", "tuition": 5000, "plan": 10}, {"school": "武汉光谷职业学院", "group_code": "C611(01)", "profession_code": "33", "raw_name": "旅游管理", "score25": "-/-", "score24": "294/105863", "tuition": 9500, "plan": 40}]}, {"name": "西式烹饪工艺", "category": "旅游服务", "options": [{"school": "武汉商贸职业学院", "group_code": "C607(01)", "profession_code": "21", "raw_name": "西式烹饪工艺 (办学地点:武汉校区)", "score25": "-/-", "score24": "328/91715", "tuition": 8800, "plan": 35}]}, {"name": "酒店管理与数字化运营", "category": "旅游服务", "options": [{"school": "武昌职业学院", "group_code": "C608(10)", "profession_code": "71", "raw_name": "酒店管理与数字化运营", "score25": "-/-", "score24": "286/108597", "tuition": 9800, "plan": 20}, {"school": "武汉交通职业学院 乡村振兴计划", "group_code": "C537(09)", "profession_code": "58", "raw_name": "酒店管理与数字化运营 (乡村振兴)", "score25": "299/116699", "score24": "-/-", "tuition": 5000, "plan": 3}]}, {"name": "国际邮轮乘务管理", "category": "交通航空", "options": [{"school": "武汉交通职业学院 乡村振兴计划", "group_code": "C537(09)", "profession_code": "65", "raw_name": "国际邮轮乘务管理 (乡村振兴)", "score25": "-/-", "score24": "347/82851", "tuition": 5000, "plan": 15}]}, {"name": "城市轨道车辆应用技术", "category": "交通航空", "options": [{"school": "武汉科技职业学院", "group_code": "C605(01)", "profession_code": "07", "raw_name": "城市轨道车辆应用技术", "score25": "-/-", "score24": "-/-", "tuition": 12000, "plan": 10}]}, {"name": "机场运行服务与管理", "category": "交通航空", "options": [{"school": "武汉商贸职业学院", "group_code": "C607(01)", "profession_code": "24", "raw_name": "机场运行服务与管理 (办学地点:武汉校区)", "score25": "-/-", "score24": "352/80482", "tuition": 12000, "plan": 16}]}, {"name": "民航运输服务", "category": "交通航空", "options": [{"school": "武汉科技职业学院", "group_code": "C605(01)", "profession_code": "06", "raw_name": "民航运输服务", "score25": "-/-", "score24": "-/-", "tuition": 9800, "plan": 60}]}, {"name": "汽车技术服务与营销", "category": "交通航空", "options": [{"school": "武汉交通职业学院 乡村振兴计划", "group_code": "C537(09)", "profession_code": "60", "raw_name": "汽车技术服务与营销 (乡村振兴)", "score25": "353/92941", "score24": "-/-", "tuition": 5000, "plan": 5}]}, {"name": "港口与航运管理", "category": "交通航空", "options": [{"school": "武汉交通职业学院 乡村振兴计划", "group_code": "C537(09)", "profession_code": "61", "raw_name": "港口与航运管理 (乡村振兴)", "score25": "-/-", "score24": "-/-", "tuition": 5000, "plan": 5}]}, {"name": "铁道交通运营管理", "category": "交通航空", "options": [{"school": "武汉科技职业学院", "group_code": "C605(01)", "profession_code": "05", "raw_name": "铁道交通运营管理", "score25": "-/-", "score24": "333/89432", "tuition": 12000, "plan": 20}]}, {"name": "铁道机车运用与维护", "category": "交通航空", "options": [{"school": "武汉科技职业学院", "group_code": "C605(01)", "profession_code": "04", "raw_name": "铁道机车运用与维护", "score25": "-/-", "score24": "330/90817", "tuition": 12000, "plan": 3}]}, {"name": "高速铁路客运服务", "category": "交通航空", "options": [{"school": "武汉商贸职业学院", "group_code": "C607(01)", "profession_code": "25", "raw_name": "高速铁路客运服务 (办学地点:武汉校区)", "score25": "-/-", "score24": "330/90817", "tuition": 12000, "plan": 15}, {"school": "武汉交通职业学院 乡村振兴计划", "group_code": "C537(09)", "profession_code": "64", "raw_name": "高速铁路客运服务 (乡村振兴)", "score25": "-/-", "score24": "-/-", "tuition": 5000, "plan": 5}]}, {"name": "医学美容技术", "category": "健康生活", "options": [{"school": "湖北健康职业学院", "group_code": "C612(01)", "profession_code": "03", "raw_name": "医学美容技术", "score25": "-/-", "score24": "251/117666", "tuition": 12900, "plan": 115}, {"school": "武汉光谷职业学院", "group_code": "C611(01)", "profession_code": "24", "raw_name": "医学美容技术", "score25": "-/-", "score24": "-/-", "tuition": 10200, "plan": 85}]}, {"name": "宠物医疗技术", "category": "健康生活", "options": [{"school": "湖北健康职业学院", "group_code": "C612(01)", "profession_code": "11", "raw_name": "宠物医疗技术", "score25": "-/-", "score24": "-/-", "tuition": 12900, "plan": 90}]}, {"name": "人工智能技术应用", "category": "理工技术", "options": [{"school": "湖北职业技术学院 乡村振兴计划", "group_code": "C505(04)", "profession_code": "49", "raw_name": "人工智能技术应用 (乡村振兴)", "score25": "314/110853", "score24": "301/103228", "tuition": 5000, "plan": 5}, {"school": "武昌职业学院", "group_code": "C608(10)", "profession_code": "60", "raw_name": "人工智能技术应用", "score25": "-/-", "score24": "296/105123", "tuition": 16600, "plan": 30}]}, {"name": "新能源汽车技术", "category": "理工技术", "options": [{"school": "湖北交通职业技术学院 中外合作办学", "group_code": "C523(06)", "profession_code": "48", "raw_name": "新能源汽车技术 (中外合作办学)(与日本中日本自动车短期大学合作办学)", "score25": "372/83620", "score24": "363/75276", "tuition": 17000, "plan": 20}, {"school": "武汉城市学院", "group_code": "C212(04)", "profession_code": "62", "raw_name": "新能源汽车技术 (第一年红安教育改革基地，第二年回武汉主校区)", "score25": "-/-", "score24": "288/107919", "tuition": 9000, "plan": 110}, {"school": "湖北开放职业学院", "group_code": "C601(01)", "profession_code": "11", "raw_name": "新能源汽车技术", "score25": "-/-", "score24": "347/82851", "tuition": 11880, "plan": 20}]}, {"name": "药品生物技术", "category": "理工技术", "options": [{"school": "湖北工业职业技术学院 中外合作办学", "group_code": "C506(08)", "profession_code": "44", "raw_name": "药品生物技术 (中外合作办学)(与白俄罗斯莫吉廖夫国立大学合作办学)", "score25": "203/136151", "score24": "-/-", "tuition": 15000, "plan": 15}]}];
-const STORAGE_KEY = "major-sort-20260801-simple-v2";
-const SELECT_KEY = "major-select-20260801-simple-v2";
+const STORAGE_KEY = "major-sort-20260801-simple-v3";
+const SELECT_KEY = "major-select-20260801-simple-v3";
 const list = document.getElementById("list");
 const toast = document.getElementById("toast");
 
@@ -262,7 +288,7 @@ function render() {
       <div class="item-main">
         <input class="select-box" type="checkbox" ${isSelected(item.name) ? "checked" : ""} aria-label="是否考虑">
         <div class="rank">${i+1}</div>
-        <div>
+        <div class="drag-zone" title="长按拖动专业">
           <div class="name">${esc(item.name)}${isSelected(item.name) ? "" : '<span class="status-text">不考虑</span>'}</div>
           <div class="school-count">${item.options.length} 个学校/专业项</div>
         </div>
@@ -343,65 +369,166 @@ function bindEvents() {
     });
   });
   list.querySelectorAll(".expand").forEach(btn => {
-    btn.addEventListener("click", e => {
+    let startX = 0;
+    let startY = 0;
+    let startTime = 0;
+    let moved = false;
+    let activePointer = null;
+
+    btn.addEventListener("pointerdown", e => {
+      if (e.button !== undefined && e.button !== 0) return;
+      startX = e.clientX;
+      startY = e.clientY;
+      startTime = Date.now();
+      moved = false;
+      activePointer = e.pointerId;
+    });
+
+    btn.addEventListener("pointermove", e => {
+      if (activePointer !== e.pointerId) return;
+      if (Math.abs(e.clientX - startX) > 8 || Math.abs(e.clientY - startY) > 8) {
+        moved = true;
+      }
+    });
+
+    btn.addEventListener("pointerup", e => {
+      if (activePointer !== e.pointerId) return;
+      const elapsed = Date.now() - startTime;
+      activePointer = null;
+
+      // Only a deliberate tap toggles details. A vertical swipe remains page scrolling.
+      if (moved || elapsed > 700) return;
+
       e.stopPropagation();
       const item = btn.closest(".item");
       item.classList.toggle("open");
       btn.textContent = item.classList.contains("open") ? "⌃" : "⌄";
     });
+
+    btn.addEventListener("pointercancel", () => {
+      activePointer = null;
+      moved = false;
+    });
+
+    // Prevent the browser-generated click from toggling a second time.
+    btn.addEventListener("click", e => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
   });
   bindDrag();
 }
 function bindDrag() {
-  let dragging = null;
-  let pointerId = null;
-  let startY = 0;
-  let moved = false;
+  const HOLD_MS = 350;
+  const CANCEL_DISTANCE = 10;
 
-  list.querySelectorAll(".item-main").forEach(row => {
-    row.addEventListener("pointerdown", e => {
-      if (e.target.closest("button") || e.target.closest(".select-box")) return;
+  list.querySelectorAll(".drag-zone").forEach(zone => {
+    let item = null;
+    let pointerId = null;
+    let startX = 0;
+    let startY = 0;
+    let activated = false;
+    let holdTimer = null;
+    let activeRow = null;
+
+    const clearHold = () => {
+      if (holdTimer) {
+        clearTimeout(holdTimer);
+        holdTimer = null;
+      }
+      if (item && !activated) item.classList.remove("drag-ready");
+    };
+
+    zone.addEventListener("pointerdown", e => {
       if (e.button !== undefined && e.button !== 0) return;
-      dragging = row.closest(".item");
+
+      item = row.closest(".item");
       pointerId = e.pointerId;
+      startX = e.clientX;
       startY = e.clientY;
-      moved = false;
-      row.setPointerCapture(pointerId);
-      dragging.classList.add("dragging");
-      document.body.style.userSelect = "none";
-      e.preventDefault();
+      activated = false;
+      activeRow = zone;
+
+      holdTimer = setTimeout(() => {
+        activated = true;
+        item.classList.add("drag-ready", "dragging");
+        zone.setPointerCapture(pointerId);
+        document.body.style.userSelect = "none";
+        zone.style.touchAction = "none";
+        if (navigator.vibrate) navigator.vibrate(25);
+      }, HOLD_MS);
     });
 
-    row.addEventListener("pointermove", e => {
-      if (!dragging || e.pointerId !== pointerId) return;
-      if (Math.abs(e.clientY - startY) > 4) moved = true;
+    zone.addEventListener("pointermove", e => {
+      if (!item || e.pointerId !== pointerId) return;
 
-      if (e.clientY < 70) window.scrollBy(0,-18);
-      if (e.clientY > window.innerHeight-60) window.scrollBy(0,18);
+      const dx = Math.abs(e.clientX - startX);
+      const dy = Math.abs(e.clientY - startY);
 
-      const hit = document.elementFromPoint(e.clientX,e.clientY);
+      if (!activated) {
+        if (dx > CANCEL_DISTANCE || dy > CANCEL_DISTANCE) {
+          clearHold();
+          item = null;
+          pointerId = null;
+          activeRow = null;
+        }
+        return;
+      }
+
+      if (e.clientY < 70) window.scrollBy(0, -18);
+      if (e.clientY > window.innerHeight - 60) window.scrollBy(0, 18);
+
+      const hit = document.elementFromPoint(e.clientX, e.clientY);
       const target = hit ? hit.closest(".item") : null;
-      if (!target || target === dragging || !sameGroup(dragging, target)) return;
+      if (!target || target === item || !sameGroup(item, target)) {
+        e.preventDefault();
+        return;
+      }
 
       const rect = target.getBoundingClientRect();
-      const before = e.clientY < rect.top + rect.height/2;
-      list.insertBefore(dragging, before ? target : target.nextSibling);
+      list.insertBefore(item, e.clientY < rect.top + rect.height / 2 ? target : target.nextSibling);
       e.preventDefault();
-    });
+    }, { passive:false });
 
-    const end = e => {
-      if (!dragging || e.pointerId !== pointerId) return;
-      dragging.classList.remove("dragging");
-      try { row.releasePointerCapture(pointerId); } catch(err) {}
-      dragging = null;
+    const finish = e => {
+      if (!item || e.pointerId !== pointerId) return;
+
+      clearHold();
+
+      if (activated) {
+        item.classList.remove("drag-ready", "dragging");
+        try {
+          if (activeRow && activeRow.hasPointerCapture(pointerId)) {
+            activeRow.releasePointerCapture(pointerId);
+          }
+        } catch(err) {}
+        zone.style.touchAction = "pan-y";
+        document.body.style.userSelect = "";
+        updateRanks();
+        saveOrder();
+        showToast("排序已保存");
+      }
+
+      item = null;
       pointerId = null;
-      document.body.style.userSelect = "";
-      updateRanks();
-      saveOrder();
-      if (moved) showToast("排序已保存");
+      activeRow = null;
+      activated = false;
     };
-    row.addEventListener("pointerup", end);
-    row.addEventListener("pointercancel", end);
+
+    zone.addEventListener("pointerup", finish);
+    zone.addEventListener("pointercancel", finish);
+    zone.addEventListener("lostpointercapture", e => {
+      if (activated && item) {
+        item.classList.remove("drag-ready", "dragging");
+        zone.style.touchAction = "pan-y";
+        document.body.style.userSelect = "";
+      }
+      clearHold();
+      item = null;
+      pointerId = null;
+      activeRow = null;
+      activated = false;
+    });
   });
 }
 render();
