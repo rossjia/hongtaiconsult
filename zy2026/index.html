@@ -212,7 +212,7 @@ h1 {
 <body>
 <main>
   <h1>专业选择与排序</h1>
-  <div class="tip">默认全部选择。手机上长按专业名称区域约0.35秒拖动排序；右侧只保留展开箭头，直接上下滑动可滚动页面。</div>
+  <div class="tip">默认全部选择。电脑按住专业名称即可拖动；手机长按约0.2秒后拖动，快速上下划动仍用于滚动页面。</div>
   <div id="list"></div>
 </main>
 <div id="toast" class="toast"></div>
@@ -419,116 +419,167 @@ function bindEvents() {
   bindDrag();
 }
 function bindDrag() {
-  const HOLD_MS = 350;
-  const CANCEL_DISTANCE = 10;
+  const TOUCH_HOLD_MS = 200;
+  const TOUCH_CANCEL_DISTANCE = 10;
 
-  list.querySelectorAll(".drag-zone").forEach(zone => {
-    let item = null;
-    let pointerId = null;
-    let startX = 0;
-    let startY = 0;
-    let activated = false;
-    let holdTimer = null;
-    let activeRow = null;
+  let item = null;
+  let zone = null;
+  let mode = "";
+  let touchId = null;
+  let startX = 0;
+  let startY = 0;
+  let activated = false;
+  let reordered = false;
+  let holdTimer = null;
 
-    const clearHold = () => {
-      if (holdTimer) {
-        clearTimeout(holdTimer);
-        holdTimer = null;
-      }
-      if (item && !activated) item.classList.remove("drag-ready");
-    };
+  const clearHold = () => {
+    if (holdTimer) {
+      clearTimeout(holdTimer);
+      holdTimer = null;
+    }
+  };
 
-    zone.addEventListener("pointerdown", e => {
-      if (e.button !== undefined && e.button !== 0) return;
+  const reset = () => {
+    clearHold();
+    if (item) item.classList.remove("drag-ready", "dragging");
+    document.body.style.userSelect = "";
+    item = null;
+    zone = null;
+    mode = "";
+    touchId = null;
+    activated = false;
+    reordered = false;
+  };
 
-      item = row.closest(".item");
-      pointerId = e.pointerId;
+  const activate = () => {
+    if (!item || !zone) return;
+    activated = true;
+    item.classList.add("drag-ready", "dragging");
+    document.body.style.userSelect = "none";
+    if (mode === "touch" && navigator.vibrate) navigator.vibrate(20);
+  };
+
+  const moveItemAt = (clientX, clientY) => {
+    if (!item || !activated) return;
+
+    if (clientY < 70) window.scrollBy(0, -18);
+    if (clientY > window.innerHeight - 60) window.scrollBy(0, 18);
+
+    const hit = document.elementFromPoint(clientX, clientY);
+    const target = hit ? hit.closest(".item") : null;
+    if (!target || target === item || !sameGroup(item, target)) return;
+
+    const rect = target.getBoundingClientRect();
+    const before = clientY < rect.top + rect.height / 2;
+    const reference = before ? target : target.nextSibling;
+
+    if (reference !== item) {
+      list.insertBefore(item, reference);
+      reordered = true;
+      updateRanks();
+    }
+  };
+
+  const finish = () => {
+    if (!item) return;
+
+    const shouldSave = activated && reordered;
+    if (item) item.classList.remove("drag-ready", "dragging");
+    document.body.style.userSelect = "";
+    clearHold();
+
+    if (shouldSave) {
+      saveOrder();
+      showToast("排序已保存");
+    }
+
+    item = null;
+    zone = null;
+    mode = "";
+    touchId = null;
+    activated = false;
+    reordered = false;
+  };
+
+  list.querySelectorAll(".drag-zone").forEach(dragZone => {
+    dragZone.addEventListener("contextmenu", e => e.preventDefault());
+
+    // 电脑端：按下即可拖动。
+    dragZone.addEventListener("mousedown", e => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+
+      item = dragZone.closest(".item");
+      zone = dragZone;
+      mode = "mouse";
       startX = e.clientX;
       startY = e.clientY;
-      activated = false;
-      activeRow = zone;
-
-      holdTimer = setTimeout(() => {
-        activated = true;
-        item.classList.add("drag-ready", "dragging");
-        zone.setPointerCapture(pointerId);
-        document.body.style.userSelect = "none";
-        zone.style.touchAction = "none";
-        if (navigator.vibrate) navigator.vibrate(25);
-      }, HOLD_MS);
+      reordered = false;
+      activate();
     });
 
-    zone.addEventListener("pointermove", e => {
-      if (!item || e.pointerId !== pointerId) return;
+    // 手机端：长按0.2秒后进入拖动；快速划动仍滚动页面。
+    dragZone.addEventListener("touchstart", e => {
+      if (e.touches.length !== 1) return;
 
-      const dx = Math.abs(e.clientX - startX);
-      const dy = Math.abs(e.clientY - startY);
-
-      if (!activated) {
-        if (dx > CANCEL_DISTANCE || dy > CANCEL_DISTANCE) {
-          clearHold();
-          item = null;
-          pointerId = null;
-          activeRow = null;
-        }
-        return;
-      }
-
-      if (e.clientY < 70) window.scrollBy(0, -18);
-      if (e.clientY > window.innerHeight - 60) window.scrollBy(0, 18);
-
-      const hit = document.elementFromPoint(e.clientX, e.clientY);
-      const target = hit ? hit.closest(".item") : null;
-      if (!target || target === item || !sameGroup(item, target)) {
-        e.preventDefault();
-        return;
-      }
-
-      const rect = target.getBoundingClientRect();
-      list.insertBefore(item, e.clientY < rect.top + rect.height / 2 ? target : target.nextSibling);
-      e.preventDefault();
-    }, { passive:false });
-
-    const finish = e => {
-      if (!item || e.pointerId !== pointerId) return;
+      const t = e.touches[0];
+      item = dragZone.closest(".item");
+      zone = dragZone;
+      mode = "touch";
+      touchId = t.identifier;
+      startX = t.clientX;
+      startY = t.clientY;
+      activated = false;
+      reordered = false;
 
       clearHold();
+      holdTimer = setTimeout(activate, TOUCH_HOLD_MS);
+    }, { passive:true });
+  });
 
-      if (activated) {
-        item.classList.remove("drag-ready", "dragging");
-        try {
-          if (activeRow && activeRow.hasPointerCapture(pointerId)) {
-            activeRow.releasePointerCapture(pointerId);
-          }
-        } catch(err) {}
-        zone.style.touchAction = "pan-y";
-        document.body.style.userSelect = "";
-        updateRanks();
-        saveOrder();
-        showToast("排序已保存");
+  // 使用窗口级监听，避免卡片换位后拖动中断。
+  window.addEventListener("mousemove", e => {
+    if (mode !== "mouse" || !item || !activated) return;
+    e.preventDefault();
+    moveItemAt(e.clientX, e.clientY);
+  }, { passive:false });
+
+  window.addEventListener("mouseup", () => {
+    if (mode === "mouse" && item) finish();
+  });
+
+  window.addEventListener("touchmove", e => {
+    if (mode !== "touch" || !item) return;
+
+    const t = [...e.touches].find(x => x.identifier === touchId);
+    if (!t) return;
+
+    const dx = Math.abs(t.clientX - startX);
+    const dy = Math.abs(t.clientY - startY);
+
+    if (!activated) {
+      if (dx > TOUCH_CANCEL_DISTANCE || dy > TOUCH_CANCEL_DISTANCE) {
+        reset();
       }
+      return;
+    }
 
-      item = null;
-      pointerId = null;
-      activeRow = null;
-      activated = false;
-    };
+    e.preventDefault();
+    moveItemAt(t.clientX, t.clientY);
+  }, { passive:false });
 
-    zone.addEventListener("pointerup", finish);
-    zone.addEventListener("pointercancel", finish);
-    zone.addEventListener("lostpointercapture", e => {
-      if (activated && item) {
-        item.classList.remove("drag-ready", "dragging");
-        zone.style.touchAction = "pan-y";
-        document.body.style.userSelect = "";
-      }
-      clearHold();
-      item = null;
-      pointerId = null;
-      activeRow = null;
-      activated = false;
-    });
+  window.addEventListener("touchend", e => {
+    if (mode !== "touch" || !item) return;
+    const stillActive = [...e.touches].some(x => x.identifier === touchId);
+    if (!stillActive) finish();
+  });
+
+  window.addEventListener("touchcancel", () => {
+    if (mode === "touch" && item) finish();
+  });
+
+  window.addEventListener("blur", () => {
+    if (item) finish();
   });
 }
 render();
