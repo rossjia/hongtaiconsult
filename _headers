@@ -1,0 +1,7 @@
+/tools/srs53-review/*
+  X-Content-Type-Options: nosniff
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' blob:; worker-src 'self' blob:; connect-src 'self'; frame-ancestors 'none'; object-src 'none'
+  Cache-Control: public, max-age=0, must-revalidate
+/assets/srs53-review-data/*
+  X-Content-Type-Options: nosniff
+  Cache-Control: public, max-age=0, must-revalidate

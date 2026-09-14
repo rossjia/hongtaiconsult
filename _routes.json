@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "include": [
+    "/tools/srs53-review/api",
+    "/tools/srs53-review/api/*"
+  ],
+  "exclude": []
+}

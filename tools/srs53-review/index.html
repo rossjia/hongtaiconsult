@@ -1,18 +1,7 @@
-<!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>中国DT · 文献审核</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
-  <style>
-    body { margin: 0; color: #24384a; background: #f7f9fb; font-family: system-ui, "Microsoft YaHei", sans-serif; }
-    main { max-width: 42rem; margin: 18vh auto 0; padding: 2rem; }
-    h1 { font-size: clamp(1.6rem, 5vw, 2rem); font-weight: 600; }
-    p { color: #596b79; font-size: 1rem; line-height: 1.8; }
-  </style>
-</head>
-<body>
-  <main><h1>中国DT · 文献审核</h1><p>审核平台准备中</p></main>
-</body>
-</html>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>中国DT · 文献审核</title><link rel="stylesheet" href="./styles.css?v=f9fa1b201b969df0"><link rel="stylesheet" href="./dev03.css?v=f9fa1b201b969df0"></head><body>
+<section id="entry" class="entry"><h1>中国DT · 文献审核</h1><form id="entry-form"><label>审核代号<input id="review-code" maxlength="35" autocomplete="off" required></label><button class="primary">进入审核</button><p id="entry-status" role="status"></p></form></section>
+<div id="application" hidden><header class="top"><button id="toggle-nav" aria-label="收起文献导航">☰</button><h1>中国DT · 文献审核</h1><span id="identity"></span><span id="save-status" role="status"></span><button id="export-review" class="primary">导出审核结果</button><button id="import-review">载入审核结果</button><button id="more">更多</button><button id="reset-layout" title="也可双击分隔条重置">重置栏宽</button></header>
+<nav class="mobile-panels"><button id="mobile-data">审核信息</button><button id="mobile-pdf">原文</button></nav><div class="workspace"><aside id="nav"><label>查找文献<input id="search" placeholder="编号、作者、标题、治疗词"></label><p id="nav-count"></p><div id="records"></div></aside><div id="nav-divider" class="divider" role="separator" aria-label="文献与信息栏宽" aria-orientation="vertical" tabindex="0"></div>
+<main id="review"><div id="article-head"></div><nav id="sections" aria-label="临床内容目录"></nav><button id="back-content" hidden>返回当前信息</button><div class="filters"><input id="result-search" placeholder="查找当前文献的内容"><select id="state-filter" aria-label="审核状态"><option value="">全部状态</option><option value="UNREVIEWED">尚未确认</option><option value="CONFIRMED">已确认</option><option value="NEEDS_REVIEW">待复核</option><option value="question">有问题</option><option value="modified">已修改</option></select><button id="next-unreviewed">下一未审核</button><button id="omission">补充信息</button></div><div id="results"></div></main><div id="pdf-divider" class="divider" role="separator" aria-label="信息与原文栏宽" aria-orientation="vertical" tabindex="0"></div>
+<section id="pdf-pane" aria-label="原文阅读器"><div class="pdf-top"><div id="source-select"></div><button id="back-result">返回信息</button><button id="fullscreen">展开原文</button><button id="close-pdf">关闭原文</button></div><div class="pdf-controls"><button id="prev-page" aria-label="上一页">‹</button><span id="page-number">—</span><button id="next-page" aria-label="下一页">›</button><select id="zoom" aria-label="缩放"><option value="fit">适合宽度</option><option value="1">100%</option><option value="1.5">150%</option><option value="2">200%</option></select><button id="rotate">旋转</button></div><label id="show-extracted-label" hidden><input type="checkbox" id="show-extracted" checked>显示已提取依据</label><div id="region-choices"></div><div id="evidence-select"></div><div id="page-links"></div><p id="anchor-status" role="status">选择信息中的“原文依据”</p><div id="pdf-scroll"><div id="pdf-stage"></div></div></section></div></div>
+<dialog id="modal"><form id="modal-form"><div class="modal-head"><h2 id="modal-title"></h2><button type="button" id="close-modal">关闭</button></div><div id="modal-body"></div><p id="modal-status" role="status"></p><div id="modal-actions"></div></form></dialog><script type="module" src="./app.js?v=f9fa1b201b969df0"></script></body></html>
