@@ -1,0 +1,7 @@
+# Preparation-only public file allowlist. Review explicitly before integrating the app.
+*
+!/.gitignore
+!/index.html
+!/assets/
+/assets/*
+!/assets/favicon-32x32.png
