@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文献检索/筛选/系统综述/Meta分析 规范与指南详解</title>
+<style>
+  :root {
+    --navy: #1c2b4a;
+    --blue: #2d5fa3;
+    --blue-light: #eaf1fb;
+    --accent: #c8791f;
+    --text: #22262e;
+    --muted: #6b7280;
+    --border: #e2e6ee;
+    --bg: #f7f8fb;
+    --card: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    line-height: 1.7;
+  }
+  header.page-header {
+    background: linear-gradient(135deg, var(--navy), var(--blue));
+    color: #fff;
+    padding: 48px 24px 36px;
+    text-align: center;
+  }
+  header.page-header h1 {
+    margin: 0 0 10px;
+    font-size: 1.9rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  header.page-header p {
+    margin: 4px 0;
+    color: #cfe0f7;
+    font-size: 0.95rem;
+  }
+  .container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+  }
+  .intro-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .intro-card h2 { margin-top: 0; font-size: 1.05rem; color: var(--navy); }
+  .intro-card ul { margin: 8px 0 0; padding-left: 20px; color: var(--muted); font-size: 0.92rem; }
+  .intro-card li { margin-bottom: 4px; }
+
+  nav.toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 24px;
+    margin-bottom: 32px;
+  }
+  nav.toc h2 { margin-top:0; font-size: 1.05rem; color: var(--navy); }
+  nav.toc ol { columns: 2; column-gap: 32px; padding-left: 20px; font-size: 0.9rem; }
+  nav.toc a { color: var(--blue); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+
+  section.category {
+    margin-bottom: 44px;
+  }
+  section.category > h2 {
+    font-size: 1.25rem;
+    color: #fff;
+    background: var(--navy);
+    padding: 10px 18px;
+    border-radius: 8px 8px 0 0;
+    margin: 0;
+  }
+  .category-body {
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    background: var(--card);
+    padding: 4px 0;
+  }
+
+  .item {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .item:last-child { border-bottom: none; }
+
+  .item-title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .item-title-row .acronym {
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .item-title-row .year {
+    font-size: 0.8rem;
+    color: #fff;
+    background: var(--blue);
+    padding: 2px 9px;
+    border-radius: 12px;
+  }
+  .full-name {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+  .scope-line {
+    font-size: 0.88rem;
+    margin-bottom: 8px;
+  }
+  .scope-line .label {
+    font-weight: 600;
+    color: var(--accent);
+    margin-right: 6px;
+  }
+  .desc {
+    font-size: 0.92rem;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .download-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--blue);
+    color: #fff !important;
+    text-decoration: none;
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 0.86rem;
+    font-weight: 600;
+    transition: background 0.15s;
+  }
+  .download-btn:hover { background: var(--navy); }
+  .download-btn.equator {
+    background: var(--accent);
+  }
+  .download-btn.equator:hover { background: #a8620f; }
+  .link-note {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .badge-direct {
+    font-size: 0.72rem;
+    background: #e6f4ea;
+    color: #1e7d34;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .badge-indirect {
+    font-size: 0.72rem;
+    background: #fdf1e2;
+    color: #a8620f;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 640px) {
+    nav.toc ol { columns: 1; }
+    header.page-header h1 { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <h1>文献检索 · 筛选 · 系统综述/Scoping Review/Meta分析<br>相关规范与指南详解</h1>
+  <p>用于建立个人/团队知识库的参考资料整理 · 更新日期 2026-09-09</p>
+</header>
+
+<div class="container">
+
+  <div class="intro-card">
+    <h2>说明</h2>
+    <ul>
+      <li>本页按"检索计划 → 检索报告 → 综述报告规范 → 方法学专用 → 质量评价工具 → 证据分级"的流程顺序组织。</li>
+      <li>每个条目标注了 <span class="badge-direct">直接开放获取全文</span> 或 <span class="badge-indirect">EQUATOR/官网索引页</span>：前者点击即可跳转到期刊/PMC/官方机构托管的免费全文或工具页面；后者指向权威索引页面，页面内会提供进一步的免费全文链接，建库时建议逐条打开核实。</li>
+      <li>所有链接均为第三方公开发布的资源，本页不托管、不重新分发任何受版权保护文件本身。</li>
+    </ul>
+  </div>
+
+  <nav class="toc">
+    <h2>目录</h2>
+    <ol>
+      <li><a href="#hub">0. 枢纽资源</a></li>
+      <li><a href="#reg">1. 计划与注册</a></li>
+      <li><a href="#search">2. 检索策略与报告</a></li>
+      <li><a href="#prisma">3. 系统综述报告规范（PRISMA家族）</a></li>
+      <li><a href="#scr">4. Scoping Review 方法学</a></li>
+      <li><a href="#obs">5. 观察性研究Meta分析</a></li>
+      <li><a href="#qual">6. 定性研究综合</a></li>
+      <li><a href="#swim">7. 无法Meta分析时的综合</a></li>
+      <li><a href="#quality">8. 方法学质量/偏倚风险评价</a></li>
+      <li><a href="#grade">9. 证据确定性分级</a></li>
+      <li><a href="#prior">10. 综述再综述（Overview of Reviews）</a></li>
+    </ol>
+  </nav>
+
+  <!-- 0. 枢纽资源 -->
+  <section class="category" id="hub">
+    <h2>0. 枢纽资源</h2>
+    <div class="category-body">
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">EQUATOR Network</span><span class="year">持续更新</span></div>
+        <div class="full-name">Enhancing the QUAlity and Transparency Of health Research</div>
+        <div class="desc">健康研究报告规范的全球总目录，几乎所有下文提到的PRISMA系列、STROBE、CONSORT等规范都能在此检索到官方条目页，页面通常附带免费全文链接、清单下载、语言译本信息。建库时建议把此站作为核心索引反复回访。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://www.equator-network.org/" target="_blank" rel="noopener">访问官网</a>
+          <span class="badge-direct">官方网站</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA Statement 官网</span><span class="year">持续更新</span></div>
+        <div class="full-name">Preferred Reporting Items for Systematic Reviews and Meta-Analyses — 官方站点</div>
+        <div class="desc">PRISMA 2020及各扩展版本的官方主页，提供清单Word/PDF下载模板、流程图生成工具、各语言翻译版本入口。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://www.prisma-statement.org/" target="_blank" rel="noopener">访问官网</a>
+          <span class="badge-direct">官方网站</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">Cochrane Handbook</span><span class="year">在线持续更新</span></div>
+        <div class="full-name">Cochrane Handbook for Systematic Reviews of Interventions</div>
+        <div class="desc">系统综述实施的"操作手册"，属于方法学指南而非报告规范，覆盖从问题构建、检索、筛选、数据提取、偏倚评估到统计合成的全流程细节，是Cochrane系统综述的强制遵循标准。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://training.cochrane.org/handbook" target="_blank" rel="noopener">在线阅读/下载</a>
+          <span class="badge-direct">官方在线手册</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">JBI Manual for Evidence Synthesis</span><span class="year">持续更新</span></div>
+        <div class="full-name">Joanna Briggs Institute 循证综合方法学手册</div>
+        <div class="desc">JBI（乔安娜布莱格研究所）出品的方法学手册，涵盖有效性综述、Scoping Review、定性综合、患病率/发生率综述、经济学证据综述等多种类型的实施标准，是PRISMA-ScR之外的核心配套方法学文献。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://synthesismanual.jbi.global" target="_blank" rel="noopener">在线阅读</a>
+          <span class="badge-direct">官方在线手册</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">Campbell Collaboration</span><span class="year">持续更新</span></div>
+        <div class="full-name">Campbell Collaboration 方法学指南</div>
+        <div class="desc">面向社会科学、教育、犯罪学、社会福利等领域的系统综述方法学标准（MECCIR类似规范），适合非医学领域的综述项目参考。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://www.campbellcollaboration.org/" target="_blank" rel="noopener">访问官网</a>
+          <span class="badge-direct">官方网站</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 1. 计划与注册 -->
+  <section class="category" id="reg">
+    <h2>1. 计划与注册（先于检索/筛选阶段）</h2>
+    <div class="category-body">
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PROSPERO</span><span class="year">2011年上线</span></div>
+        <div class="full-name">International Prospective Register of Systematic Reviews</div>
+        <div class="scope-line"><span class="label">适用：</span>健康相关系统综述的前瞻性注册</div>
+        <div class="desc">由英国约克大学Centre for Reviews and Dissemination（CRD）主持的国际系统综述注册平台。注册需在数据提取开始前完成，目的是防止选择性报告、减少重复劳动、提高透明度。注意：Scoping Review、文献综述（非系统综述）不符合PROSPERO注册资格。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://www.crd.york.ac.uk/prospero/" target="_blank" rel="noopener">前往注册/检索</a>
+          <span class="badge-direct">官方注册平台</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">OSF Registries</span><span class="year">持续更新</span></div>
+        <div class="full-name">Open Science Framework Registries</div>
+        <div class="scope-line"><span class="label">适用：</span>PROSPERO不覆盖的综述类型（如Scoping Review协议、社会科学综述）</div>
+        <div class="desc">开放科学框架提供的通用注册平台，适合发布Scoping Review、方法学研究等PROSPERO不接受的协议类型。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://osf.io/registries" target="_blank" rel="noopener">前往注册</a>
+          <span class="badge-direct">官方平台</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA-P 2015</span><span class="year">2015</span></div>
+        <div class="full-name">Preferred Reporting Items for Systematic review and Meta-Analysis Protocols</div>
+        <div class="scope-line"><span class="label">适用：</span>系统综述<b>计划书/协议</b>的撰写与报告</div>
+        <div class="desc">17条条目清单，用于指导系统综述协议（尚未开始综述本身）的透明报告，常与PROSPERO注册配合使用，是资助方/期刊要求提交协议时的常见依据。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4320440/" target="_blank" rel="noopener">下载全文（PMC）</a>
+          <span class="badge-direct">PMC开放获取</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 2. 检索策略 -->
+  <section class="category" id="search">
+    <h2>2. 检索策略制定与报告</h2>
+    <div class="category-body">
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA-S</span><span class="year">2021</span></div>
+        <div class="full-name">PRISMA extension for reporting literature Searches in systematic reviews</div>
+        <div class="scope-line"><span class="label">适用：</span>系统综述中检索策略部分的透明报告</div>
+        <div class="desc">16条条目，专门指导如何透明报告数据库/检索平台、检索词构建逻辑、检索日期、结果记录数、去重方法等，是PRISMA 2020的直接补充，常由图书馆员/情报专家撰写检索方法时依据。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7839230/" target="_blank" rel="noopener">下载全文（PMC，CC BY）</a>
+          <span class="badge-direct">PMC开放获取</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRESS 2015 Guideline</span><span class="year">2015/2016更新</span></div>
+        <div class="full-name">Peer Review of Electronic Search Strategies</div>
+        <div class="scope-line"><span class="label">适用：</span>电子检索策略的同行评审</div>
+        <div class="desc">用于系统综述/卫生技术评估中检索式质量把关的评审清单，常由第二位情报学专家对主检索策略进行同行评审，检查概念翻译准确性、布尔逻辑、拼写、数据库特异性语法等。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://www.cda-amc.ca/sites/default/files/pdf/CP0015_PRESS_Update_Report_2016.pdf" target="_blank" rel="noopener">下载PDF（CADTH官方）</a>
+          <span class="badge-direct">政府机构开放获取</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3. PRISMA家族 -->
+  <section class="category" id="prisma">
+    <h2>3. 系统综述报告规范 — PRISMA家族</h2>
+    <div class="category-body">
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA 2020</span><span class="year">2021</span></div>
+        <div class="full-name">Preferred Reporting Items for Systematic Reviews and Meta-Analyses（2020修订版）</div>
+        <div class="scope-line"><span class="label">适用：</span>系统综述与Meta分析的通用报告规范，替代2009版</div>
+        <div class="desc">27条核心清单+流程图，是目前使用最广泛的系统综述报告标准，几乎所有医学期刊要求投稿时附带PRISMA 2020清单。反映了检索、筛选、偏倚评估、合成方法等方面的方法学进展。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8005924/" target="_blank" rel="noopener">下载全文（PMC，BMJ）</a>
+          <span class="badge-direct">PMC开放获取</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA-Abstracts</span><span class="year">2013/2020修订</span></div>
+        <div class="full-name">PRISMA extension for journal and conference Abstracts</div>
+        <div class="scope-line"><span class="label">适用：</span>期刊/会议摘要中的系统综述报告</div>
+        <div class="desc">当系统综述全文过长而只需提交结构化摘要时（如会议摘要），本清单规定摘要中必须包含的最小信息集。</div>
+        <div class="download-row">
+          <a class="download-btn equator" href="https://www.equator-network.org/reporting-guidelines-keyword/prisma-extension/" target="_blank" rel="noopener">前往EQUATOR索引页</a>
+          <span class="badge-indirect">索引页含免费全文链接</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA-ScR</span><span class="year">2018</span></div>
+        <div class="full-name">PRISMA Extension for Scoping Reviews</div>
+        <div class="scope-line"><span class="label">适用：</span>Scoping Review（范围综述）及证据图谱（Evidence Map）</div>
+        <div class="desc">20条必选+2条可选条目，是Scoping Review领域最重要的报告规范，与JBI方法学配套使用。官方站点还提供教学视频与逐条目讲解Tip Sheets。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://www.acpjournals.org/doi/full/10.7326/M18-0850" target="_blank" rel="noopener">下载全文（Annals of Internal Medicine）</a>
+          <span class="badge-direct">期刊开放获取</span>
+        </div>
+        <div class="download-row" style="margin-top:8px;">
+          <a class="download-btn" href="https://www.prisma-statement.org/scoping" target="_blank" rel="noopener">官方页面（清单Word/PDF+教学视频）</a>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA-DTA</span><span class="year">2018</span></div>
+        <div class="full-name">PRISMA extension for Diagnostic Test Accuracy studies</div>
+        <div class="scope-line"><span class="label">适用：</span>诊断准确性研究的系统综述与Meta分析</div>
+        <div class="desc">针对诊断试验准确性数据（灵敏度/特异性等）汇总分析的特殊报告要求，同时提供摘要版清单（PRISMA-DTA for Abstracts）。</div>
+        <div class="download-row">
+          <a class="download-btn equator" href="https://www.equator-network.org/reporting-guidelines/prisma-dta/" target="_blank" rel="noopener">前往EQUATOR条目页</a>
+          <span class="badge-indirect">索引页含免费全文链接</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA-NMA</span><span class="year">2015</span></div>
+        <div class="full-name">PRISMA extension for Network Meta-Analyses</div>
+        <div class="scope-line"><span class="label">适用：</span>网状Meta分析（多种干预间接比较）报告</div>
+        <div class="desc">针对同时比较3种及以上干预措施、涉及直接与间接证据合成的网状Meta分析的特殊报告要求（如网络几何图、不一致性检验报告等）。</div>
+        <div class="download-row">
+          <a class="download-btn equator" href="https://www.equator-network.org/reporting-guidelines-keyword/prisma-extension/" target="_blank" rel="noopener">前往EQUATOR索引页</a>
+          <span class="badge-indirect">索引页含免费全文链接</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA-IPD</span><span class="year">2015</span></div>
+        <div class="full-name">PRISMA extension for Individual Participant Data meta-analyses</div>
+        <div class="scope-line"><span class="label">适用：</span>基于个体患者原始数据（而非汇总统计量）的Meta分析</div>
+        <div class="desc">IPD Meta分析需要联系原始研究者获取患者层面数据，报告要求涵盖数据整合、协调、缺失数据处理等特殊环节。</div>
+        <div class="download-row">
+          <a class="download-btn equator" href="https://www.equator-network.org/reporting-guidelines-keyword/prisma-extension/" target="_blank" rel="noopener">前往EQUATOR索引页</a>
+          <span class="badge-indirect">索引页含免费全文链接</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA harms checklist</span><span class="year">2016</span></div>
+        <div class="full-name">PRISMA harms checklist: improving harms reporting in systematic reviews</div>
+        <div class="scope-line"><span class="label">适用：</span>系统综述中不良反应/伤害结局的报告</div>
+        <div class="desc">许多系统综述只关注疗效结局，本清单专门补足安全性/伤害数据的完整报告要求。</div>
+        <div class="download-row">
+          <a class="download-btn equator" href="https://www.equator-network.org/reporting-guidelines-keyword/prisma-extension/" target="_blank" rel="noopener">前往EQUATOR索引页</a>
+          <span class="badge-indirect">索引页含免费全文链接</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA-LSR</span><span class="year">2024</span></div>
+        <div class="full-name">Extension of the PRISMA 2020 statement for Living Systematic Reviews</div>
+        <div class="scope-line"><span class="label">适用：</span>活综述/持续更新型系统综述</div>
+        <div class="desc">最新的PRISMA扩展之一（2024年发布），针对"随新证据出现而持续更新"的综述类型，规定了版本管理、更新频率、变更记录等特殊报告项。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12036629/" target="_blank" rel="noopener">下载全文（PMC，BMJ）</a>
+          <span class="badge-direct">PMC开放获取</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA-COSMIN for OMIs</span><span class="year">2024</span></div>
+        <div class="full-name">Guideline for reporting systematic reviews of Outcome Measurement Instruments</div>
+        <div class="scope-line"><span class="label">适用：</span>结局测量工具（如量表、问卷）的系统综述</div>
+        <div class="desc">结合PRISMA与COSMIN（结局测量工具选择共识标准）开发，专门用于评价与报告"测量工具本身质量"的系统综述，而非干预效果的综述。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11286641/" target="_blank" rel="noopener">下载全文（PMC）</a>
+          <span class="badge-direct">PMC开放获取</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA-CI</span><span class="year">AHRQ系列</span></div>
+        <div class="full-name">PRISMA extension for Complex Interventions</div>
+        <div class="scope-line"><span class="label">适用：</span>复杂干预（多组分、多层面）系统综述</div>
+        <div class="desc">由美国AHRQ（医疗保健研究与质量局）系列论文之一发布，针对包含多个相互作用组件的复杂干预（如行为干预、系统性医疗改革项目）的综述报告特殊要求。</div>
+        <div class="download-row">
+          <a class="download-btn equator" href="https://www.equator-network.org/reporting-guidelines-keyword/prisma-extension/" target="_blank" rel="noopener">前往EQUATOR索引页</a>
+          <span class="badge-indirect">索引页含免费全文链接</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA-CHM 2020</span><span class="year">2020</span></div>
+        <div class="full-name">PRISMA Extension for Chinese Herbal Medicines</div>
+        <div class="scope-line"><span class="label">适用：</span>中草药相关系统综述</div>
+        <div class="desc">针对中草药复方成分复杂、命名不统一、质量控制差异大等特点定制的报告要求，是中医药领域系统综述的重要参考标准。</div>
+        <div class="download-row">
+          <a class="download-btn equator" href="https://www.equator-network.org/reporting-guidelines-keyword/prisma-extension/" target="_blank" rel="noopener">前往EQUATOR索引页</a>
+          <span class="badge-indirect">索引页含免费全文链接</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA for Acupuncture</span></div>
+        <div class="full-name">Reporting items for systematic reviews and meta-analyses of acupuncture</div>
+        <div class="scope-line"><span class="label">适用：</span>针灸相关系统综述</div>
+        <div class="desc">补充针灸干预细节（穴位选择、针刺深度、留针时间、得气感等）的特殊报告要求，是针灸类研究综述的补充清单。</div>
+        <div class="download-row">
+          <a class="download-btn equator" href="https://www.equator-network.org/reporting-guidelines-keyword/prisma-extension/" target="_blank" rel="noopener">前往EQUATOR索引页</a>
+          <span class="badge-indirect">索引页含免费全文链接</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA extension for Moxibustion</span><span class="year">2020</span></div>
+        <div class="full-name">PRISMA扩展-灸法</div>
+        <div class="scope-line"><span class="label">适用：</span>灸法相关系统综述</div>
+        <div class="desc">与针灸扩展类似，补充灸法干预细节（施灸方式、时长、艾条种类等）的报告要求。</div>
+        <div class="download-row">
+          <a class="download-btn equator" href="https://www.equator-network.org/reporting-guidelines-keyword/prisma-extension/" target="_blank" rel="noopener">前往EQUATOR索引页</a>
+          <span class="badge-indirect">索引页含免费全文链接</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA-EconEval</span><span class="year">研发中（协议已发表）</span></div>
+        <div class="full-name">PRISMA extension for systematic reviews of health economic evaluations</div>
+        <div class="scope-line"><span class="label">适用：</span>卫生经济学评价系统综述</div>
+        <div class="desc">正在制定中的扩展版本，用于规范成本效果分析、成本效用分析等卫生经济学证据综述的报告，目前可获取的是项目协议论文。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12607203/" target="_blank" rel="noopener">下载协议全文（PMC）</a>
+          <span class="badge-direct">PMC开放获取</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 4. Scoping Review 方法学 -->
+  <section class="category" id="scr">
+    <h2>4. Scoping Review（范围综述）专用方法学</h2>
+    <div class="category-body">
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">Arksey &amp; O'Malley 框架</span><span class="year">2005</span></div>
+        <div class="full-name">Scoping studies: towards a methodological framework</div>
+        <div class="desc">Scoping Review领域最早、最经典的方法学框架，提出五阶段流程：①识别研究问题 ②识别相关研究 ③研究筛选 ④数据图表化 ⑤汇总、总结与报告结果。原文发表于Int J Soc Res Methodol（订阅期刊），非完全开放获取。</div>
+        <div class="download-row">
+          <a class="download-btn equator" href="https://www.equator-network.org/reporting-guidelines-study-design/systematic-reviews-and-meta-analyses/" target="_blank" rel="noopener">通过EQUATOR/图书馆数据库检索</a>
+          <span class="badge-indirect">需通过机构图书馆获取全文</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">Levac et al. 改进框架</span><span class="year">2010</span></div>
+        <div class="full-name">Scoping studies: advancing the methodology</div>
+        <div class="desc">对Arksey框架的关键环节进行了操作化细化和改进建议，是继原始框架后被引用第二多的Scoping Review方法学文献，发表于开放获取期刊Implementation Science。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://implementationscience.biomedcentral.com/" target="_blank" rel="noopener">前往期刊官网检索原文</a>
+          <span class="badge-indirect">开放获取期刊，需检索具体文章</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">JBI Scoping Review方法学</span><span class="year">持续更新</span></div>
+        <div class="full-name">JBI Manual for Evidence Synthesis — 第10章：Scoping Reviews</div>
+        <div class="desc">目前国际上被广泛采纳的Scoping Review实施标准流程，比Arksey/Levac框架更详尽、更具操作性，与PRISMA-ScR报告规范配套使用，通常建议二者结合。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://synthesismanual.jbi.global" target="_blank" rel="noopener">在线阅读</a>
+          <span class="badge-direct">官方在线手册</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRISMA-ScR配套教学资源</span><span class="year">持续更新</span></div>
+        <div class="full-name">Knowledge Translation Program — PRISMA-ScR教学视频与逐条Tip Sheets</div>
+        <div class="desc">由PRISMA-ScR开发团队制作的配套学习资料，包含介绍视频以及针对20+2条清单每一条的详细撰写指导，非常适合初次撰写Scoping Review的研究者。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://knowledgetranslation.net/portfolios/the-prisma-scr-prisma-extension-for-scoping-reviews/" target="_blank" rel="noopener">访问教学资源页</a>
+          <span class="badge-direct">官方教学网站</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 5. 观察性研究 -->
+  <section class="category" id="obs">
+    <h2>5. 观察性研究/病例系列的Meta分析报告</h2>
+    <div class="category-body">
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">MOOSE</span><span class="year">2000</span></div>
+        <div class="full-name">Meta-analysis Of Observational Studies in Epidemiology</div>
+        <div class="scope-line"><span class="label">适用：</span>队列、病例对照、横断面等观察性研究的Meta分析</div>
+        <div class="desc">早于PRISMA近20年发布，专门针对观察性研究特有的混杂因素、暴露分类误差等问题设计报告要求，至今仍被许多流行病学、公共卫生期刊指定使用（可与PRISMA配合或替代使用，视期刊要求而定）。</div>
+        <div class="download-row">
+          <a class="download-btn" href="http://www.consort-statement.org/Media/Default/Downloads/Other%20Instruments/MOOSE%20Statement%202000.pdf" target="_blank" rel="noopener">下载清单PDF</a>
+          <span class="badge-direct">开放获取PDF</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 6. 定性综合 -->
+  <section class="category" id="qual">
+    <h2>6. 定性研究综合（Qualitative Evidence Synthesis）</h2>
+    <div class="category-body">
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">ENTREQ</span><span class="year">2012</span></div>
+        <div class="full-name">Enhancing Transparency in Reporting the synthesis of Qualitative research</div>
+        <div class="desc">针对定性研究（如访谈、焦点小组研究）的系统综合报告规范，涵盖主题综合、元民族志等多种定性综合方法的透明报告要求。</div>
+        <div class="download-row">
+          <a class="download-btn equator" href="https://www.equator-network.org/reporting-guidelines/entreq-2/" target="_blank" rel="noopener">前往EQUATOR条目页</a>
+          <span class="badge-indirect">索引页含免费全文链接</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">eMERGe</span><span class="year">2018</span></div>
+        <div class="full-name">meta-Ethnography Reporting Guidance</div>
+        <div class="desc">专门针对"元民族志"（一种强调概念转译、而非简单主题归纳的定性综合方法）的报告指南。</div>
+        <div class="download-row">
+          <a class="download-btn equator" href="https://www.equator-network.org/reporting-guidelines-study-design/qualitative-research/" target="_blank" rel="noopener">前往EQUATOR定性研究分类页</a>
+          <span class="badge-indirect">需在分类页中查找eMERGe条目</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">RAMESES / RAMESES II</span><span class="year">2013 / 2017</span></div>
+        <div class="full-name">Realist And Meta-narrative Evidence Syntheses: Evolving Standards</div>
+        <div class="desc">分别针对"现实主义综述"（Realist Review，关注"什么情境下、什么机制导致什么结果"）与"元叙事综述"（Meta-narrative Review，追溯不同研究传统的知识演变）两种复杂综述类型的报告标准。</div>
+        <div class="download-row">
+          <a class="download-btn equator" href="https://www.equator-network.org/reporting-guidelines-study-design/qualitative-research/" target="_blank" rel="noopener">前往EQUATOR定性研究分类页</a>
+          <span class="badge-indirect">需在分类页中查找RAMESES条目</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">GRADE-CERQual</span><span class="year">持续更新</span></div>
+        <div class="full-name">Confidence in the Evidence from Reviews of Qualitative research</div>
+        <div class="desc">GRADE方法在定性证据综合中的对应版本，用于评估定性研究综合结论的"确信度"，常与ENTREQ配合使用。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://www.cerqual.org/" target="_blank" rel="noopener">访问官网</a>
+          <span class="badge-direct">官方网站</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 7. SWiM -->
+  <section class="category" id="swim">
+    <h2>7. 无法进行Meta分析时的定量综合报告</h2>
+    <div class="category-body">
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">SWiM</span><span class="year">2020</span></div>
+        <div class="full-name">Synthesis Without Meta-analysis</div>
+        <div class="scope-line"><span class="label">适用：</span>纳入研究异质性过大、无法统计合并效应量时的叙述性综合</div>
+        <div class="desc">9条条目清单，专门规范"叙述性/结构化综合"（如效应方向计数法、Harvest Plot等替代方法）的透明报告，弥补了PRISMA 2020在这一环节报告不够具体的问题，通常与PRISMA 2020配合使用。</div>
+        <div class="download-row">
+          <a class="download-btn equator" href="https://www.equator-network.org/reporting-guidelines/synthesis-without-meta-analysis-swim-in-systematic-reviews-reporting-guideline/" target="_blank" rel="noopener">前往EQUATOR条目页</a>
+          <span class="badge-indirect">索引页含免费全文链接（BMJ开放获取）</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 8. 质量评价工具 -->
+  <section class="category" id="quality">
+    <h2>8. 方法学质量/偏倚风险评价工具</h2>
+    <div class="category-body">
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">AMSTAR-2</span><span class="year">2017</span></div>
+        <div class="full-name">A MeaSurement Tool to Assess systematic Reviews 2</div>
+        <div class="scope-line"><span class="label">评价对象：</span>系统综述本身的<b>方法学质量</b>（区别于纳入研究的偏倚风险）</div>
+        <div class="desc">16条条目，是目前使用最广的系统综述质量评价工具，尤其适用于同时纳入随机与非随机研究的综述。常与ROBIS配合使用（AMSTAR-2侧重方法学严谨性，ROBIS侧重过程偏倚）。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5833365/" target="_blank" rel="noopener">下载全文（PMC，BMJ）</a>
+          <span class="badge-direct">PMC开放获取</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">ROBIS</span><span class="year">2016</span></div>
+        <div class="full-name">Risk Of Bias In Systematic reviews</div>
+        <div class="scope-line"><span class="label">评价对象：</span>系统综述过程中的<b>偏倚风险</b></div>
+        <div class="desc">24条条目，分三阶段（评估相关性→识别过程中的问题→判断总体偏倚风险），覆盖研究纳入标准、检索与筛选、数据提取与评估、结果合成四个领域。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4687950" target="_blank" rel="noopener">下载全文（PMC，CC BY）</a>
+          <span class="badge-direct">PMC开放获取</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">Cochrane RoB 2</span><span class="year">2019</span></div>
+        <div class="full-name">Risk of Bias tool version 2</div>
+        <div class="scope-line"><span class="label">评价对象：</span>纳入的<b>随机对照试验</b>偏倚风险</div>
+        <div class="desc">Cochrane推荐的RCT偏倚风险评价工具最新版，覆盖随机化过程、偏离预定干预、结局数据缺失、结局测量、选择性报告五个领域。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://methods.cochrane.org/bias/resources/rob-2-revised-cochrane-risk-bias-tool-randomized-trials" target="_blank" rel="noopener">访问官方工具页</a>
+          <span class="badge-direct">Cochrane官方网站</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">ROBINS-I</span><span class="year">2016</span></div>
+        <div class="full-name">Risk Of Bias In Non-randomised Studies of Interventions</div>
+        <div class="scope-line"><span class="label">评价对象：</span>纳入的<b>非随机干预性研究</b>偏倚风险</div>
+        <div class="desc">用于评价队列研究、对照前后研究等非随机干预性研究的偏倚风险，覆盖混杂、参与者选择、干预分类、偏离干预、缺失数据、结局测量、选择性报告七个领域。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://www.riskofbias.info/welcome/home" target="_blank" rel="noopener">访问官网</a>
+          <span class="badge-direct">官方网站</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">QUADAS-2</span><span class="year">2011</span></div>
+        <div class="full-name">Quality Assessment of Diagnostic Accuracy Studies 2</div>
+        <div class="scope-line"><span class="label">评价对象：</span>纳入的<b>诊断准确性研究</b>偏倚风险</div>
+        <div class="desc">常与PRISMA-DTA配套使用，覆盖患者选择、待评价试验、参考标准、病例流程与时间四个领域的偏倚风险与适用性评估。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://www.bristol.ac.uk/population-health-sciences/projects/quadas/quadas-2/" target="_blank" rel="noopener">访问官方工具页</a>
+          <span class="badge-direct">官方网站（Bristol大学）</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">Newcastle-Ottawa Scale (NOS)</span></div>
+        <div class="full-name">纽卡斯尔-渥太华量表</div>
+        <div class="scope-line"><span class="label">评价对象：</span>纳入的<b>队列研究/病例对照研究</b>质量</div>
+        <div class="desc">虽非GRADE官方推荐首选工具，但因简单易用而在观察性研究Meta分析中被广泛采用，采用星级评分制，覆盖研究人群选择、可比性、结局/暴露评估三大维度。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://www.ohri.ca/programs/clinical_epidemiology/oxford.asp" target="_blank" rel="noopener">下载量表（渥太华医院研究所）</a>
+          <span class="badge-direct">官方网站</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">JBI Critical Appraisal Checklists</span><span class="year">持续更新</span></div>
+        <div class="full-name">JBI各研究设计批判性评价清单</div>
+        <div class="desc">JBI针对RCT、队列研究、病例对照研究、横断面研究、病例系列、病例报告、定性研究、系统综述等13种不同研究设计分别提供的独立评价清单，是目前覆盖研究类型最全的评价工具集之一。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://jbi.global/critical-appraisal-tools" target="_blank" rel="noopener">下载全部清单</a>
+          <span class="badge-direct">官方网站，免费下载</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">COSMIN Risk of Bias tool</span><span class="year">持续更新</span></div>
+        <div class="full-name">COSMIN偏倚风险评价工具</div>
+        <div class="scope-line"><span class="label">评价对象：</span>结局测量工具（OMI）研究的方法学质量</div>
+        <div class="desc">与PRISMA-COSMIN for OMIs配套使用，评价量表/问卷等测量工具的信度、效度、反应度等测量学特性研究的方法学质量。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://www.cosmin.nl/tools/" target="_blank" rel="noopener">访问官网工具页</a>
+          <span class="badge-direct">官方网站</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 9. GRADE -->
+  <section class="category" id="grade">
+    <h2>9. 证据确定性/推荐强度分级</h2>
+    <div class="category-body">
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">GRADE Handbook</span><span class="year">持续更新</span></div>
+        <div class="full-name">Grading of Recommendations Assessment, Development and Evaluation — 方法学手册</div>
+        <div class="desc">对定量证据体的"确定性"（高/中/低/极低）进行系统分级的方法学框架，广泛用于临床指南制定、卫生技术评估等场景，考虑偏倚风险、不一致性、间接性、不精确性、发表偏倚五大降级因素。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://gdt.gradepro.org/app/handbook/handbook.html" target="_blank" rel="noopener">在线阅读手册</a>
+          <span class="badge-direct">官方在线手册</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">GRADE Working Group 官网</span><span class="year">持续更新</span></div>
+        <div class="full-name">GRADE工作组官方网站</div>
+        <div class="desc">GRADE方法核心文献列表、培训资源、软件工具（GRADEpro GDT）的官方入口，包含GRADE for Network Meta-analysis等专项应用指导。</div>
+        <div class="download-row">
+          <a class="download-btn" href="https://www.gradeworkinggroup.org/" target="_blank" rel="noopener">访问官网</a>
+          <span class="badge-direct">官方网站</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 10. PRIOR -->
+  <section class="category" id="prior">
+    <h2>10. 综述再综述（Overview of Reviews / Umbrella Review）</h2>
+    <div class="category-body">
+
+      <div class="item">
+        <div class="item-title-row"><span class="acronym">PRIOR</span><span class="year">2022</span></div>
+        <div class="full-name">Preferred Reporting Items for Overviews of Reviews</div>
+        <div class="scope-line"><span class="label">适用：</span>"系统综述再综述"（伞形综述，即以已发表系统综述作为纳入单位的综述）</div>
+        <div class="desc">专门针对Overview of Reviews这一特殊综述类型的报告规范，需处理原始研究在多篇综述间的重叠问题（常用Corrected Covered Area指标量化重叠程度）。</div>
+        <div class="download-row">
+          <a class="download-btn equator" href="https://www.equator-network.org/reporting-guidelines/prior-preferred-reporting-items-for-overviews-of-reviews/" target="_blank" rel="noopener">前往EQUATOR条目页</a>
+          <span class="badge-indirect">索引页含免费全文链接（BMJ开放获取）</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  本页整理基于 EQUATOR Network、PRISMA官网及相关期刊公开发布内容，仅提供第三方公开链接索引，不托管/分发受版权保护的原始文件。<br>
+  PRISMA扩展仍在持续增加，建议定期复核
+  <a href="https://www.equator-network.org/reporting-guidelines-keyword/prisma-extension/" target="_blank" rel="noopener">EQUATOR关键词页面</a> 获取最新版本。
+</footer>
+
+</body>
+</html>
