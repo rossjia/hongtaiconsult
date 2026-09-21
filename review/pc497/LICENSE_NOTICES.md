@@ -1,0 +1,1 @@
+PDF.js 6.3.289 (Apache-2.0); ExcelJS 4.4.0 (MIT). See included licenses and export-worker.js.LEGAL.txt. Viewer adapted from existing SRS53 viewer; coordinate adapter uses existing PC497 PDF_USER_SPACE_UNROTATED rects. No source PDF bytes modified.
