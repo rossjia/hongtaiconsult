@@ -257,7 +257,8 @@ var explicitSQL = "EXISTS(SELECT 1 FROM operations o WHERE o.record_id=c.record_
 var closedSQL = `((f.status IN ('CONFIRMED','DISCUSS') AND f.field_revision=c.revision) OR c.text<>COALESCE(p.new_text,i.text))`;
 var tierJoin = "FROM pc497_risk_tiers t JOIN current_values c ON c.record_id=t.record_id AND c.unit=t.field_id LEFT JOIN field_reviews f ON f.record_id=c.record_id AND f.field_id=c.unit JOIN initial_cells i ON i.record_id=c.record_id AND i.field_id=c.unit LEFT JOIN pc497_science_patches p ON p.record_id=c.record_id AND p.field_id=c.unit AND p.applied_revision=c.revision AND p.new_text=c.text";
 var unresolved = (tiers, record = "r.id") => `(SELECT count(*) ${tierJoin} WHERE t.record_id=${record} AND t.tier IN (${tiers.map((t) => "'" + t + "'").join(",")}) AND NOT COALESCE((${closedSQL}),0))`;
-var publicAccount = (a) => ({ id: a.id, name: a.name, role: a.role, can_write: a.write_scope !== "none" });
+var sandboxAccount = (a) => a.id === "srstest";
+var publicAccount = (a) => ({ id: a.id, name: a.name, role: a.role, can_write: sandboxAccount(a) || a.write_scope !== "none", sandbox_mode: sandboxAccount(a) });
 var authorName = (id) => accounts.get(id)?.name || "";
 async function recordData(db, id) {
   const results = await db.batch([
@@ -414,6 +415,7 @@ async function handle(request, env) {
       return json({ account: publicAccount(account2), baseline: BASELINE_SHA }, 200, { "Set-Cookie": cookie(id + "." + await mac(env.PC497_SESSION_SECRET, id), request) });
     }
     const { account } = await session(request, env), db = env.PC497_DB;
+    if (sandboxAccount(account) && !["GET", "HEAD", "OPTIONS"].includes(request.method)) fail(403, "\u6C99\u76D2\u4E1A\u52A1\u4FEE\u6539\u4EC5\u4FDD\u7559\u5728\u5F53\u524D\u9875\u9762\u5185\u5B58\uFF1B\u670D\u52A1\u5668\u5199\u5165\u5DF2\u963B\u6B62", { code: "SANDBOX_WRITE_BLOCKED", sandbox_mode: true });
     if (path.join("/") === "auth/me" && request.method === "GET") return json({ account: publicAccount(account), baseline: BASELINE_SHA });
     if (path[0] === "sources" && path.length === 2 && ["GET", "HEAD"].includes(request.method)) return await sourceResponse(request, env, account, path[1]);
     if (path[0] === "export-data" && path.length === 1 && request.method === "GET") return json(await exportData(db));
