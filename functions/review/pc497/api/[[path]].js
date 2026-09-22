@@ -258,7 +258,7 @@ var closedSQL = `((f.status IN ('CONFIRMED','DISCUSS') AND f.field_revision=c.re
 var tierJoin = "FROM pc497_risk_tiers t JOIN current_values c ON c.record_id=t.record_id AND c.unit=t.field_id LEFT JOIN field_reviews f ON f.record_id=c.record_id AND f.field_id=c.unit JOIN initial_cells i ON i.record_id=c.record_id AND i.field_id=c.unit LEFT JOIN pc497_science_patches p ON p.record_id=c.record_id AND p.field_id=c.unit AND p.applied_revision=c.revision AND p.new_text=c.text";
 var unresolved = (tiers, record = "r.id") => `(SELECT count(*) ${tierJoin} WHERE t.record_id=${record} AND t.tier IN (${tiers.map((t) => "'" + t + "'").join(",")}) AND NOT COALESCE((${closedSQL}),0))`;
 var sandboxAccount = (a) => a.id === "srstest";
-var publicAccount = (a) => ({ id: a.id, name: a.name, role: a.role, can_write: sandboxAccount(a) || a.write_scope !== "none", sandbox_mode: sandboxAccount(a) });
+var publicAccount = (a) => ({ id: a.id, name: sandboxAccount(a) ? "\u4F53\u9A8C\u8D26\u53F7" : a.name, role: a.role, can_write: sandboxAccount(a) || a.write_scope !== "none", sandbox_mode: sandboxAccount(a) });
 var authorName = (id) => accounts.get(id)?.name || "";
 async function recordData(db, id) {
   const results = await db.batch([

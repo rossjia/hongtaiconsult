@@ -130,7 +130,7 @@ main{--toolbar-height:40px;position:relative;scroll-padding-top:calc(var(--toolb
 [data-review-focus].review-current::before{display:none}
 .card.focus-card>.field-heading{background:#fff;border-bottom-color:#dce5eb;box-shadow:none}
 .card.focus-card>.field-heading h3:before{content:'• ';color:#267ba6}
-.note-section textarea.result,.discussion-controls textarea{min-height:34px;max-height:none;resize:vertical;font-size:12px;padding:5px 8px;line-height:1.6}
+.note-section textarea.result,.discussion-controls textarea{min-height:34px;max-height:none;resize:vertical;overflow-y:auto;font-size:12px;padding:5px 8px;line-height:1.6}
 .note-section:focus-within{outline:none;box-shadow:none}
 .extraction-details{border:0;background:transparent}
 .extraction-details summary{padding:5px 0;font-size:12px;color:#637381}

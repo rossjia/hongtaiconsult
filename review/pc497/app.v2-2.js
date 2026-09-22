@@ -969,6 +969,7 @@ function paintSave(q) {
 function editor(record, unit, parent) {
   parent.dataset.unit = unit;
   const q = getQueue(record, unit), area = el("textarea", void 0, "result");
+  area.rows = 1;
   area.value = q.value;
   area.spellcheck = false;
   area.setAttribute("aria-label", (field_registry_default.fields.find((f) => f.field_id === unit)?.label || NOTE_LABELS[unit]) + " \u5F53\u524D\u7ED3\u679C");
