@@ -565,17 +565,14 @@ function reviewLayout() {
     }
   }
   function apply(save = false) {
-    const width = grid.clientWidth || innerWidth, mobile = innerWidth <= 850, mid = width >= 1150 ? 420 : 340, gap = 8;
-    let l = clamp(prefs.left, 168, 340), r = clamp(prefs.right ?? defaults().right, 260, 900);
-    if (!mobile) {
-      const available = width - mid - (prefs.hideLeft ? 0 : gap) - (prefs.hideRight ? 0 : gap);
-      if (!prefs.hideRight) r = Math.min(r, available - (prefs.hideLeft ? 0 : l));
-      if (r < 260 && !prefs.hideLeft) {
-        l = Math.max(168, l - (260 - r));
-        r = 260;
-      }
-      if (prefs.hideRight && !prefs.hideLeft) l = Math.min(l, available);
-    }
+    const width = grid.clientWidth || innerWidth, mobile = innerWidth <= 850, gap = 8;
+    let l = clamp(prefs.left, 168, 340);
+    const gaps = (prefs.hideLeft ? 0 : gap) + (prefs.hideRight ? 0 : gap);
+    const room = width - (prefs.hideLeft ? 0 : l) - gaps;
+    const rightMin = clamp(room - 600, 260, 440), mid = Math.min(600, Math.max(340, room - rightMin));
+    if (!mobile && !prefs.hideLeft) l = clamp(Math.min(l, width - gaps - mid - (prefs.hideRight ? 0 : rightMin)), 168, 340);
+    const rightMax = Math.max(rightMin, width - (prefs.hideLeft ? 0 : l) - gaps - mid);
+    const r = clamp(prefs.right ?? defaults().right, rightMin, rightMax);
     grid.style.setProperty("--left-width", l + "px");
     grid.style.setProperty("--right-width", r + "px");
     grid.dataset.hideLeft = String(prefs.hideLeft);
@@ -586,8 +583,8 @@ function reviewLayout() {
       const hidden = side === "left" ? prefs.hideLeft : prefs.hideRight, b = document.querySelector("#toggle-" + side), size = side === "left" ? l : r;
       dividers[i].hidden = mobile || hidden;
       dividers[i].setAttribute("aria-valuenow", Math.round(size));
-      dividers[i].setAttribute("aria-valuemin", side === "left" ? 168 : 260);
-      dividers[i].setAttribute("aria-valuemax", side === "left" ? 340 : 900);
+      dividers[i].setAttribute("aria-valuemin", side === "left" ? 168 : rightMin);
+      dividers[i].setAttribute("aria-valuemax", side === "left" ? 340 : rightMax);
       if (b) {
         const label = (hidden ? "\u663E\u793A" : "\u9690\u85CF") + (side === "left" ? "\u6587\u732E\u5217\u8868\u680F" : "\u5168\u6587\u680F");
         b.title = label;
