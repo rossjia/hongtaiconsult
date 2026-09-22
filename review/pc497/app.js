@@ -1569,7 +1569,7 @@ $("#export").onclick = async () => {
     if (!saved) notice("\u4ECD\u6709\u4FEE\u6539\u5C1A\u672A\u540C\u6B65\uFF0C\u5EFA\u8BAE\u4FDD\u5B58\u5B8C\u6210\u540E\u518D\u5BFC\u51FA\u3002");
     else notice("\u6B63\u5728\u8BFB\u53D6\u670D\u52A1\u5668\u5DF2\u4FDD\u5B58\u5185\u5BB9\u5E76\u751F\u6210\u516D\u8868Excel\u2026");
     const data = await request("export-data");
-    const worker = new Worker(BASE + "export-worker.js", { type: "module" });
+    const worker = new Worker(BASE + "export-worker.js?controlled=01", { type: "module" });
     worker.onmessage = ({ data: message }) => {
       worker.terminate();
       if (message.error) {
