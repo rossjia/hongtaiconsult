@@ -81,13 +81,10 @@ var EXPORT_NOTICE = "\u5BFC\u51FA\u57FA\u4E8E\u670D\u52A1\u5668\u5DF2\u4FDD\u5B5
 var BASE = "/review/pc497/";
 var API = BASE + "api/";
 var STATUS = { NOT_REVIEWED: "\u672A\u5BA1\u6838", IN_PROGRESS: "\u5BA1\u6838\u4E2D", COMPLETED: "\u5DF2\u5B8C\u6210", DISCUSS: "\u5F85\u786E\u8BA4" };
-var TIER_LABELS = { P1: "P1 \u4F18\u5148\u5224\u65AD", P2: "P2 \u91CD\u70B9\u6838\u67E5", P3: "P3 \u5FEB\u901F\u786E\u8BA4", P4: "P4 \u5E38\u89C4" };
-function reviewResolved(current, review, tier) {
-  return review?.status === "CONFIRMED" && review.field_revision === current.revision && (tier !== "P1" || !!review.explicit_confirmed);
-}
+var TIER_LABELS = { P1: "P1", P2: "P2", P3: "P3" };
 function humanStatus(initial, current, review) {
   if (review?.status === "DISCUSS" && review.field_revision === current.revision) return "\u5F85\u786E\u8BA4";
-  if (current.text !== initial) return "\u5DF2\u4FEE\u6539";
+  if (current.text !== initial && !(current.science_patch && current.science_patch_revision === current.revision && current.science_patch_text === current.text)) return "\u5DF2\u4FEE\u6539";
   if (review?.status === "CONFIRMED" && review.field_revision === current.revision) return "\u5DF2\u6838\u5BF9";
   return "\u672A\u5BA1\u6838";
 }
@@ -102,7 +99,7 @@ var cleanReview = (r) => r ? Object.fromEntries(Object.entries(r).filter(([k]) =
 async function reviewSnapshot(db, id) {
   const rows = await db.batch([
     db.prepare("SELECT status,revision FROM records WHERE id=?").bind(id),
-    db.prepare("SELECT unit,text,revision,last_author,last_modified FROM current_values WHERE record_id=?").bind(id),
+    db.prepare("SELECT c.unit,c.text,c.revision,c.last_author,c.last_modified,p.new_text IS NOT NULL science_patch,p.applied_revision science_patch_revision,p.new_text science_patch_text FROM current_values c LEFT JOIN pc497_science_patches p ON p.record_id=c.record_id AND p.field_id=c.unit AND p.applied_revision=c.revision AND p.new_text=c.text WHERE c.record_id=?").bind(id),
     db.prepare("SELECT f.*,EXISTS(SELECT 1 FROM operations o WHERE o.record_id=f.record_id AND o.unit=f.field_id AND o.action='confirm' AND o.result_revision=f.field_revision) explicit_confirmed FROM field_reviews f WHERE record_id=?").bind(id),
     db.prepare("SELECT rowid AS seq,unit,action,result_revision,old_text,actor,changed FROM operations WHERE record_id=? ORDER BY rowid DESC").bind(id)
   ]);
@@ -257,19 +254,19 @@ async function allowed(db, account, id, write = false) {
   return row;
 }
 var explicitSQL = "EXISTS(SELECT 1 FROM operations o WHERE o.record_id=c.record_id AND o.unit=c.unit AND o.action='confirm' AND o.result_revision=c.revision)";
-var closedSQL = `COALESCE(f.status='CONFIRMED' AND f.field_revision=c.revision AND (t.tier<>'P1' OR ${explicitSQL}),0)=1`;
-var tierJoin = "FROM review_tiers t JOIN current_values c ON c.record_id=t.record_id AND c.unit=t.field_id LEFT JOIN field_reviews f ON f.record_id=c.record_id AND f.field_id=c.unit";
-var unresolved = (tiers, record = "r.id") => `(SELECT count(*) ${tierJoin} WHERE t.record_id=${record} AND t.tier IN (${tiers.map((t) => "'" + t + "'").join(",")}) AND NOT (${closedSQL}))`;
+var closedSQL = `((f.status IN ('CONFIRMED','DISCUSS') AND f.field_revision=c.revision) OR c.text<>COALESCE(p.new_text,i.text))`;
+var tierJoin = "FROM pc497_risk_tiers t JOIN current_values c ON c.record_id=t.record_id AND c.unit=t.field_id LEFT JOIN field_reviews f ON f.record_id=c.record_id AND f.field_id=c.unit JOIN initial_cells i ON i.record_id=c.record_id AND i.field_id=c.unit LEFT JOIN pc497_science_patches p ON p.record_id=c.record_id AND p.field_id=c.unit AND p.applied_revision=c.revision AND p.new_text=c.text";
+var unresolved = (tiers, record = "r.id") => `(SELECT count(*) ${tierJoin} WHERE t.record_id=${record} AND t.tier IN (${tiers.map((t) => "'" + t + "'").join(",")}) AND NOT COALESCE((${closedSQL}),0))`;
 var publicAccount = (a) => ({ id: a.id, name: a.name, role: a.role, can_write: a.write_scope !== "none" });
 var authorName = (id) => accounts.get(id)?.name || "";
 async function recordData(db, id) {
   const results = await db.batch([
     db.prepare("SELECT * FROM records WHERE id=?").bind(id),
     db.prepare("SELECT payload FROM payload_chunks WHERE record_id=? ORDER BY ordinal").bind(id),
-    db.prepare("SELECT unit,text,revision,last_author,last_modified FROM current_values WHERE record_id=?").bind(id),
+    db.prepare("SELECT c.unit,c.text,c.revision,c.last_author,c.last_modified,p.new_text IS NOT NULL science_patch,p.applied_revision science_patch_revision,p.new_text science_patch_text FROM current_values c LEFT JOIN pc497_science_patches p ON p.record_id=c.record_id AND p.field_id=c.unit AND p.applied_revision=c.revision AND p.new_text=c.text WHERE c.record_id=?").bind(id),
     db.prepare("SELECT f.*,EXISTS(SELECT 1 FROM operations o WHERE o.record_id=f.record_id AND o.unit=f.field_id AND o.action='confirm' AND o.result_revision=f.field_revision) explicit_confirmed FROM field_reviews f WHERE record_id=?").bind(id),
     db.prepare("SELECT key,source_id,sha256 FROM sources WHERE record_id=?").bind(id),
-    db.prepare("SELECT field_id,tier FROM review_tiers WHERE record_id=?").bind(id)
+    db.prepare("SELECT field_id,tier FROM pc497_risk_tiers WHERE record_id=?").bind(id)
   ]);
   const data = JSON.parse(results[1].results.map((r) => r.payload).join(""));
   const tiers = new Map(results[5].results.map((t) => [t.field_id, t.tier]));
@@ -314,7 +311,7 @@ async function mutate(db, account, record, unit, input, action) {
   await db.prepare(sql).bind(...params).run();
   const saved = await db.prepare("SELECT * FROM operations WHERE id=?").bind(op).first();
   if (!saved && action === "complete") {
-    const fields = (await db.prepare(`SELECT t.field_id,t.tier ${tierJoin} WHERE t.record_id=? AND t.tier IN ('P1','P2','P3') AND NOT (${closedSQL}) ORDER BY t.tier,t.field_id`).bind(record.id).all()).results;
+    const fields = (await db.prepare(`SELECT t.field_id,t.tier ${tierJoin} WHERE t.record_id=? AND t.tier IN ('P1','P2','P3') AND NOT COALESCE((${closedSQL}),0) ORDER BY t.tier,t.field_id`).bind(record.id).all()).results;
     const p1 = fields.filter((f) => f.tier === "P1");
     if (p1.length) fail(409, `\u4ECD\u6709 ${p1.length} \u4E2A P1 \u5B57\u6BB5\u672A\u660E\u786E\u5904\u7406\uFF1A` + p1.map((p) => field_registry_default.fields.find((f) => f.field_id === p.field_id).label).join("\u3001"), { code: "UNRESOLVED_P1", fields: p1.map((f) => f.field_id) });
     const p2 = fields.filter((f) => f.tier === "P2").length, p3 = fields.filter((f) => f.tier === "P3").length;
@@ -367,7 +364,7 @@ async function sourceResponse(request, env, account, key) {
   return new Response(object.body, { status, headers });
 }
 async function exportData(db) {
-  const result = await db.prepare(`SELECT r.id,r.title,r.owner,r.status,r.revision,r.last_author,r.last_modified,(SELECT json_group_array(json_object('field_id',field_id,'initial',initial,'current',current,'author',author,'modified_at',modified_at,'revision',revision,'tier',tier,'explicit_confirmed',explicit_confirmed,'reason',reason,'review_status',review_status,'review_revision',review_revision,'review_note',review_note)) FROM (SELECT i.field_id,i.text initial,c.text current,c.last_author author,c.last_modified modified_at,c.revision,t.tier,${explicitSQL} explicit_confirmed,i.reason,f.status review_status,f.field_revision review_revision,f.note review_note FROM initial_cells i JOIN current_values c ON c.record_id=i.record_id AND c.unit=i.field_id LEFT JOIN field_reviews f ON f.record_id=c.record_id AND f.field_id=c.unit LEFT JOIN review_tiers t ON t.record_id=c.record_id AND t.field_id=c.unit WHERE i.record_id=r.id ORDER BY i.field_id)) cells FROM records r ORDER BY r.sort_order,r.id`).all();
+  const result = await db.prepare(`SELECT r.id,r.title,r.owner,r.status,r.revision,r.last_author,r.last_modified,(SELECT json_group_array(json_object('field_id',field_id,'initial',initial,'current',current,'author',author,'modified_at',modified_at,'revision',revision,'tier',tier,'explicit_confirmed',explicit_confirmed,'reason',reason,'review_status',review_status,'review_revision',review_revision,'review_note',review_note,'science_patch',science_patch,'science_patch_revision',science_patch_revision,'science_patch_text',science_patch_text)) FROM (SELECT i.field_id,i.text initial,c.text current,c.last_author author,c.last_modified modified_at,c.revision,t.tier,${explicitSQL} explicit_confirmed,i.reason,f.status review_status,f.field_revision review_revision,f.note review_note,p.new_text IS NOT NULL science_patch,p.applied_revision science_patch_revision,p.new_text science_patch_text FROM initial_cells i JOIN current_values c ON c.record_id=i.record_id AND c.unit=i.field_id LEFT JOIN field_reviews f ON f.record_id=c.record_id AND f.field_id=c.unit LEFT JOIN pc497_risk_tiers t ON t.record_id=c.record_id AND t.field_id=c.unit LEFT JOIN pc497_science_patches p ON p.record_id=c.record_id AND p.field_id=c.unit AND p.applied_revision=c.revision AND p.new_text=c.text WHERE i.record_id=r.id ORDER BY i.field_id)) cells FROM records r ORDER BY r.sort_order,r.id`).all();
   if (result.results.length !== 497) fail(503, "\u521D\u59CB\u6570\u636E\u672A\u5B8C\u6574\u5C31\u7EEA");
   const rows = [], statuses = [], diffs = [], attention = [], assignments = [];
   for (const r of result.results) {
@@ -375,20 +372,20 @@ async function exportData(db) {
     if (cells.length !== 37) fail(503, "\u5B57\u6BB5\u6570\u636E\u4E0D\u5B8C\u6574");
     const owner = authorName(r.owner), currentTitle = cells[1].current, states = [], pendingTiers = { P1: 0, P2: 0, P3: 0 }, counts = { "\u5DF2\u6838\u5BF9": 0, "\u5DF2\u4FEE\u6539": 0, "\u5F85\u786E\u8BA4": 0, "\u672A\u5BA1\u6838": 0 };
     for (const c of cells) {
-      const state = humanStatus(c.initial, { text: c.current, revision: c.revision }, { status: c.review_status, field_revision: c.review_revision });
+      const state = humanStatus(c.initial, { text: c.current, revision: c.revision, science_patch: c.science_patch, science_patch_revision: c.science_patch_revision, science_patch_text: c.science_patch_text }, { status: c.review_status, field_revision: c.review_revision });
       states.push(state);
       counts[state]++;
       const f = field_registry_default.fields.find((f2) => f2.field_id === c.field_id);
       if (c.initial !== c.current) diffs.push([r.id, currentTitle, f.original_column, f.label, c.initial, c.current, authorName(c.author), beijingTime(c.modified_at), state]);
-      const closed = reviewResolved({ revision: c.revision }, { status: c.review_status, field_revision: c.review_revision, explicit_confirmed: c.explicit_confirmed }, c.tier);
-      if (Object.hasOwn(pendingTiers, c.tier) && !closed) pendingTiers[c.tier]++;
-      if (c.tier && (c.tier !== "P4" || state === "\u5F85\u786E\u8BA4")) {
+      const closed = state !== "\u672A\u5BA1\u6838";
+      if (["P1", "P2"].includes(c.tier) && !closed) pendingTiers[c.tier]++;
+      if (["P1", "P2"].includes(c.tier) || state === "\u5F85\u786E\u8BA4") {
         attention.push([r.id, f.label, c.current, TIER_LABELS[c.tier], [c.reason, state === "\u5F85\u786E\u8BA4" ? c.review_note : ""].filter(Boolean).join("\n"), state, owner, closed ? "\u5DF2\u5904\u7406" : "\u5F85\u5904\u7406"]);
       }
     }
     rows.push([...cells.map((c) => c.current), owner, authorName(r.last_author)]);
     statuses.push([r.id, currentTitle, ...states]);
-    assignments.push([r.id, currentTitle, owner, STATUS[r.status], counts["\u5DF2\u6838\u5BF9"], counts["\u5DF2\u4FEE\u6539"], counts["\u5F85\u786E\u8BA4"], pendingTiers.P1 + pendingTiers.P2 + pendingTiers.P3, TIER_LABELS[["P1", "P2", "P3"].find((t) => pendingTiers[t])] || "", beijingTime(r.last_modified)]);
+    assignments.push([r.id, currentTitle, owner, STATUS[r.status], counts["\u5DF2\u6838\u5BF9"], counts["\u5DF2\u4FEE\u6539"], counts["\u5F85\u786E\u8BA4"], pendingTiers.P1 + pendingTiers.P2, TIER_LABELS[["P1", "P2", "P3"].find((t) => pendingTiers[t])] || "", beijingTime(r.last_modified)]);
   }
   attention.sort((a, b) => (a[7] === "\u5DF2\u5904\u7406") - (b[7] === "\u5DF2\u5904\u7406") || a[3].slice(0, 2).localeCompare(b[3].slice(0, 2)));
   return { export_contract: "V4", baseline: BASELINE_SHA, baseline_id: BASELINE_ID, generated_at: (/* @__PURE__ */ new Date()).toISOString(), record_count: 497, rows, statuses, diffs, attention, assignments, notice: EXPORT_NOTICE };
@@ -413,7 +410,7 @@ async function handle(request, env) {
       const ready = await env.PC497_DB.prepare("SELECT ready,input_sha FROM project WHERE id=?").bind("PC497").first();
       if (!ready?.ready || ready.input_sha !== BASELINE_SHA) fail(503, "\u521D\u59CB\u6570\u636E\u5C1A\u672A\u5C31\u7EEA");
       const id = hex(crypto.getRandomValues(new Uint8Array(32))), previous = await signedSessionId(request, env);
-      await env.PC497_DB.batch([...previous ? [env.PC497_DB.prepare("DELETE FROM sessions WHERE id=?").bind(previous)] : [], env.PC497_DB.prepare("DELETE FROM sessions WHERE expires<?").bind(Date.now()), env.PC497_DB.prepare("INSERT INTO sessions VALUES(?,?,?)").bind(id, code, Date.now() + 432e5)]);
+      await env.PC497_DB.batch([...previous ? [env.PC497_DB.prepare("DELETE FROM sessions WHERE id=?").bind(previous)] : [], env.PC497_DB.prepare("INSERT INTO sessions VALUES(?,?,?)").bind(id, code, Date.now() + 432e5)]);
       return json({ account: publicAccount(account2), baseline: BASELINE_SHA }, 200, { "Set-Cookie": cookie(id + "." + await mac(env.PC497_SESSION_SECRET, id), request) });
     }
     const { account } = await session(request, env), db = env.PC497_DB;
@@ -421,8 +418,8 @@ async function handle(request, env) {
     if (path[0] === "sources" && path.length === 2 && ["GET", "HEAD"].includes(request.method)) return await sourceResponse(request, env, account, path[1]);
     if (path[0] === "export-data" && path.length === 1 && request.method === "GET") return json(await exportData(db));
     if (path[0] === "records" && path.length === 1 && request.method === "GET") {
-      const rows = await db.prepare(`SELECT r.id,r.title,r.owner,r.status,r.revision,${unresolved(["P1"])} P1,${unresolved(["P2"])} P2,${unresolved(["P3"])} P3 FROM records r ${account.read_scope === "assigned" ? "WHERE r.owner=?" : ""} ORDER BY r.sort_order,r.id`).bind(...account.read_scope === "assigned" ? [account.id] : []).all();
-      return json({ records: rows.results.map((r) => ({ ...r, tier_summary: { P1: r.P1, P2: r.P2, P3: r.P3, pending: r.P1 + r.P2 + r.P3, highest: ["P1", "P2", "P3"].find((t) => r[t]) || "" } })) });
+      const rows = await db.prepare(`SELECT r.id,r.title,r.owner,r.status,r.revision,${unresolved(["P1"])} P1,${unresolved(["P2"])} P2,0 P3 FROM records r ${account.read_scope === "assigned" ? "WHERE r.owner=?" : ""} ORDER BY r.sort_order,r.id`).bind(...account.read_scope === "assigned" ? [account.id] : []).all();
+      return json({ records: rows.results.map((r) => ({ ...r, tier_summary: { P1: r.P1, P2: r.P2, P3: r.P3, pending: r.P1 + r.P2, highest: ["P1", "P2"].find((t) => r[t]) || "" } })) });
     }
     if (path[0] === "records" && path.length >= 2) {
       const record = await allowed(db, account, path[1], request.method !== "GET");
