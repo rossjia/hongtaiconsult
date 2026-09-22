@@ -7,9 +7,6 @@ var BASE = "/review/pc497/";
 var API = BASE + "api/";
 var STATUS = { NOT_REVIEWED: "\u672A\u5BA1\u6838", IN_PROGRESS: "\u5BA1\u6838\u4E2D", COMPLETED: "\u5DF2\u5B8C\u6210", DISCUSS: "\u5F85\u786E\u8BA4" };
 var TIER_LABELS = { P1: "P1", P2: "P2", P3: "P3" };
-function reviewResolved(current, review, tier) {
-  return review?.status === "CONFIRMED" && review.field_revision === current.revision && (tier !== "P1" || !!review.explicit_confirmed);
-}
 function tierSummary(cells, values, reviews) {
   const counts2 = { P1: 0, P2: 0, P3: 0 };
   for (const c of cells) if (["P1", "P2"].includes(c.review_tier) && humanStatus(c.text, values[c.field_id], reviews[c.field_id]) === "\u672A\u5BA1\u6838") counts2[c.review_tier]++;
@@ -997,7 +994,7 @@ function pending() {
   return [...state.queues.values(), ...state.reviewQueues.values()].some((q) => q.actor === state.account?.id && q.dirty);
 }
 function resolved(cell) {
-  return reviewResolved(state.record.values[cell.field_id], displayedReviews()[cell.field_id], cell.review_tier);
+  return humanStatus(cell.text, state.record.values[cell.field_id], displayedReviews()[cell.field_id]) !== "\u672A\u5BA1\u6838";
 }
 function counts(module) {
   return tierSummary(state.record.cells.filter((c) => !module || c.module_id === module), state.record.values, displayedReviews());
@@ -1416,7 +1413,7 @@ async function reviewAction(action, field, text = "") {
     if (state.record?.record_id !== id) return;
     let confirmRemaining = false;
     if (action === "complete") {
-      const remaining = counts(), p1 = record.cells.filter((c) => c.review_tier === "P1" && !resolved(c));
+      const remaining = { ...counts(), P3: record.cells.filter((c) => c.review_tier === "P3" && !resolved(c)).length }, p1 = record.cells.filter((c) => c.review_tier === "P1" && !resolved(c));
       if (p1.length) {
         notice(`\u4ECD\u6709 ${p1.length} \u4E2A P1 \u5B57\u6BB5\u672A\u660E\u786E\u5904\u7406\uFF1A` + p1.map((c) => field_registry_default.fields.find((f) => f.field_id === c.field_id).label).join("\u3001"));
         return;
