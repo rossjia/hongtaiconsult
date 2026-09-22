@@ -98,3 +98,21 @@ main{--toolbar-height:40px;position:relative;scroll-padding-top:calc(var(--toolb
 #review-footer{position:static}.pdf-top{padding-top:10px}.source-tools{padding-bottom:4px}
 @container(max-width:400px){#section-rail{display:none}#cards{padding-right:14px;padding-left:14px}.field-heading h3{flex-basis:100%}}
 @media(max-width:850px){#section-rail{display:none}#cards{padding:0 14px 20px}.field-heading h3{flex-basis:100%}.field-heading .review-actions{margin-left:auto}.section-heading{flex-wrap:wrap}#review-toolbar{padding:5px 8px}.step-navigation button{width:28px}.card{padding:14px 0}.workspace>main{container-type:normal}#article-head{padding:3px 0 0}}
+/* V2.1: keep action groups inside their own card, independent of title length. */
+.field-heading{max-width:100%;flex-wrap:wrap}
+.field-heading h3{flex:1 1 160px;min-width:0;max-width:100%;overflow-wrap:anywhere}
+.field-controls{display:flex;align-items:center;justify-content:flex-end;gap:5px;flex:0 1 auto;flex-wrap:wrap;min-width:0;max-width:100%;margin-left:auto}
+.field-controls>.human-status,.field-controls>.tier-pill,.field-controls>.review-actions{flex-shrink:0}
+.field-heading .review-actions{flex-wrap:nowrap;margin:0;max-width:100%}
+.review-actions button{white-space:nowrap}
+.review-sync{font-size:12px;line-height:1.7;color:#8b451c;padding:6px;overflow-wrap:anywhere;background:#fff3e3}
+.review-sync button,.discussion-controls button{font-size:11px;margin:4px;padding:4px 7px}
+.discussion-controls{min-width:0;max-width:100%}
+#section-rail button{--node-color:#c8d5de;background:var(--node-color)}
+#section-rail button[data-tier="P1"]{--node-color:#b64845}
+#section-rail button[data-tier="P2"]{--node-color:#995d1d}
+#section-rail button[data-tier="P3"]{--node-color:#d6c58a}
+#section-rail button.active,#section-rail button:hover{background:var(--node-color)}
+#section-rail button.active{box-shadow:0 0 0 2px #267ba6}
+@container(max-width:480px){.field-heading h3{flex-basis:100%}.field-controls{width:100%}}
+@media(max-width:850px){.field-heading h3{flex-basis:100%}.field-controls{width:100%}}

@@ -579,6 +579,104 @@ function reviewLayout() {
   } };
 }
 
+// src/review-state.mjs
+var cleanReview = (r) => r ? Object.fromEntries(Object.entries(r).filter(([k]) => k !== "restore_review")) : null;
+function projectReview(reviews, values, { action, field, text = "" }) {
+  const next = { ...reviews }, old = next[field], revision = values[field].revision;
+  if (action === "confirm") next[field] = { ...old, status: "CONFIRMED", field_revision: revision, explicit_confirmed: true, note: "", restore_review: null };
+  else if (action === "discuss" || action === "set_discuss") next[field] = { ...old, status: "DISCUSS", field_revision: revision, note: text, restore_review: old?.status === "DISCUSS" ? old.restore_review : cleanReview(old) };
+  else if (action === "undiscuss" && old?.restore_review?.field_revision === revision) next[field] = cleanReview(old.restore_review);
+  else delete next[field];
+  return next;
+}
+
+// src/review-queue.mjs
+var ReviewQueue = class {
+  constructor({ actor, record, prepare, request: request2, apply, onState = () => {
+  }, onAck = () => {
+  } }) {
+    Object.assign(this, { actor, recordData: record, prepare, request: request2, apply, onState, onAck });
+    this.record = record.record_id;
+    this.tasks = [];
+    this.state = "\u5DF2\u4FDD\u5B58";
+    this.active = true;
+    this.generation = 0;
+  }
+  get dirty() {
+    return this.tasks.length > 0;
+  }
+  get reviews() {
+    return this.error ? this.recordData.reviews : this.tasks.reduce((reviews, t) => projectReview(reviews, this.recordData.values, t), this.recordData.reviews);
+  }
+  enqueue(action, field, text = "") {
+    if (!this.active || this.error) return false;
+    this.tasks.push({ action, field, text, generation: ++this.generation, operation_id: crypto.randomUUID() });
+    this.onState(this);
+    this.flush();
+    return true;
+  }
+  async flush() {
+    if (this.flight) {
+      await this.flight;
+      return !this.dirty;
+    }
+    if (!this.active || this.error) return false;
+    this.flight = (async () => {
+      while (this.active && this.tasks.length) {
+        const t = this.tasks[0];
+        try {
+          this.state = "\u4FDD\u5B58\u4E2D";
+          this.onState(this);
+          if (!await this.prepare()) throw Error("\u6B63\u6587\u4ECD\u672A\u540C\u6B65\uFF0C\u8BF7\u5148\u5904\u7406\u6B63\u6587\u4FDD\u5B58");
+          if (!this.active) break;
+          t.body ??= { action: t.action, field_id: t.field, text: t.text, operation_id: t.operation_id, expected_revision: this.recordData.values[t.field].revision, expected_record_revision: this.recordData.state.revision };
+          const response = await this.request("records/" + this.record + "/review", { method: "POST", body: t.body });
+          this.apply(response);
+          this.tasks.shift();
+          this.onAck(this);
+        } catch (e) {
+          this.error = e.message;
+          this.conflict = e.status === 409;
+          this.state = this.conflict ? "\u6709\u51B2\u7A81" : "\u672A\u540C\u6B65";
+          if (e.data?.current?.reviews) this.apply(e.data.current);
+          break;
+        } finally {
+          this.onState(this);
+        }
+      }
+    })();
+    await this.flight;
+    this.flight = null;
+    if (!this.dirty) this.state = "\u5DF2\u4FDD\u5B58";
+    this.onState(this);
+    return !this.dirty;
+  }
+  async retry() {
+    if (this.conflict || !this.active) return false;
+    this.error = "";
+    this.state = "\u4FDD\u5B58\u4E2D";
+    return this.flush();
+  }
+  async acceptServer() {
+    if (!this.active) return;
+    try {
+      const snapshot = await this.request("records/" + this.record + "/review");
+      this.apply(snapshot);
+      this.tasks = [];
+      this.error = "";
+      this.conflict = false;
+      this.state = "\u5DF2\u4FDD\u5B58";
+    } catch (e) {
+      this.error = e.message;
+      this.state = "\u672A\u540C\u6B65";
+    }
+    this.onState(this);
+  }
+  deactivate() {
+    this.active = false;
+  }
+};
+
 // src/global-save-status.mjs
 var GlobalSaveStatus = class {
   constructor({ queues, render, now = () => Date.now(), schedule = (fn, ms) => setTimeout(fn, ms), cancel = (id) => clearTimeout(id), slowMs = 1500, savedMs = 1600 }) {
@@ -662,7 +760,7 @@ var button = (text, fn, cls) => {
   b.onclick = fn;
   return b;
 };
-var state = { account: null, records: [], record: null, module: "M01", epoch: 0, queues: /* @__PURE__ */ new Map(), positions: /* @__PURE__ */ new Map(), currentEvidence: null, target: null };
+var state = { account: null, records: [], record: null, module: "M01", epoch: 0, queues: /* @__PURE__ */ new Map(), reviewQueues: /* @__PURE__ */ new Map(), positions: /* @__PURE__ */ new Map(), currentEvidence: null, target: null };
 var viewer = new Viewer();
 var layout = reviewLayout();
 layout.mount();
@@ -691,7 +789,7 @@ document.addEventListener("pointerdown", (e) => {
   if (!e.target.closest(".tier-badge")) tierTip.hidden = true;
 });
 var resume = null;
-var globalSave = new GlobalSaveStatus({ queues: () => [...state.queues.values()].filter((q) => q.actor === (state.account?.id || resume?.actor)), render: ({ state: status, text }) => {
+var globalSave = new GlobalSaveStatus({ queues: () => [...state.queues.values(), ...state.reviewQueues.values()].filter((q) => q.actor === (state.account?.id || resume?.actor)), render: ({ state: status, text }) => {
   const node = $("#global-save-status");
   node.dataset.state = status;
   node.textContent = text;
@@ -703,7 +801,7 @@ async function request(...args) {
   } catch (e) {
     if (e.status === 401 && state.account) {
       resume = { actor: state.account.id, record: state.record?.record_id };
-      for (const q of state.queues.values()) q.deactivate();
+      for (const q of [...state.queues.values(), ...state.reviewQueues.values()]) q.deactivate();
       state.account = null;
       state.epoch++;
       viewer.clear();
@@ -825,50 +923,132 @@ function autosize(area) {
   area.style.height = "auto";
   area.style.height = Math.max(70, area.scrollHeight + 2) + "px";
 }
-async function flush() {
+async function flushContents() {
   const active = [...state.queues.values()].filter((q) => q.actor === state.account?.id);
   return (await Promise.all(active.map((q) => q.flush()))).every(Boolean);
 }
+async function flush() {
+  if (!await flushContents()) return false;
+  return (await Promise.all([...state.reviewQueues.values()].filter((q) => q.actor === state.account?.id).map((q) => q.flush()))).every(Boolean);
+}
+function displayedReviews() {
+  return state.reviewQueues.get(state.record?.record_id)?.reviews || state.record?.reviews || {};
+}
+function getReviewQueue(record) {
+  let q = state.reviewQueues.get(record.record_id);
+  if (q) {
+    q.recordData = record;
+    return q;
+  }
+  q = new ReviewQueue({ actor: state.account.id, record, prepare: () => state.account?.id === q.actor ? flushContents() : false, request, apply: (snapshot) => {
+    const r = q.recordData;
+    if (snapshot.state.revision < r.state.revision) return;
+    r.state = { ...r.state, ...snapshot.state };
+    r.reviews = snapshot.reviews;
+    for (const [unit, v] of Object.entries(snapshot.values)) {
+      if (v.revision < r.values[unit].revision) continue;
+      const editorQueue = state.queues.get(queueKey(r.record_id, unit));
+      if (editorQueue?.dirty) editorQueue.observe(v.text, v.revision);
+      else if (editorQueue && v.revision > editorQueue.revision) {
+        Object.assign(editorQueue, { base: v.text, value: v.text, revision: v.revision, observed: { text: v.text, revision: v.revision } });
+        const area = state.record === r ? document.querySelector(`[data-unit="${unit}"] textarea.result`) : null;
+        if (area) {
+          area.value = v.text;
+          autosize(area);
+        }
+      }
+      r.values[unit] = { ...r.values[unit], ...v };
+    }
+  }, onState: () => {
+    globalSave.update();
+    if (state.account?.id !== q.actor) return;
+    paintArticleSummary(q.recordData, q.reviews);
+    if (state.record?.record_id === q.record) {
+      paintBadges();
+      paintStatus();
+      paintReviewSync(q);
+    }
+  }, onAck: () => globalSave.ack() });
+  state.reviewQueues.set(record.record_id, q);
+  return q;
+}
+function paintReviewSync(q) {
+  for (const card of $("#cards").querySelectorAll("[data-card]")) {
+    const box = card.querySelector(".review-sync");
+    if (!box) continue;
+    const active = q.error && q.tasks[0]?.field === card.dataset.card;
+    box.hidden = !active;
+    if (!active) {
+      box.replaceChildren();
+      continue;
+    }
+    if (box.dataset.message === q.error && box.firstChild) continue;
+    box.dataset.message = q.error;
+    box.replaceChildren(el("span", q.error), q.conflict ? button("\u91C7\u7528\u670D\u52A1\u5668\u5BA1\u6838\u72B6\u6001", () => q.acceptServer()) : button("\u91CD\u8BD5\u5BA1\u6838\u4FDD\u5B58", () => q.retry()), button("\u8BFB\u53D6\u670D\u52A1\u5668\u5BA1\u6838\u72B6\u6001", () => q.acceptServer()));
+  }
+}
+function toggleReview(field, status) {
+  if (!state.record || !state.account.can_write || state.reviewBusy) return;
+  const q = getReviewQueue(state.record), old = q.reviews[field], active = old?.status === status && old.field_revision === state.record.values[field].revision;
+  q.enqueue(status === "CONFIRMED" ? active ? "unconfirm" : "confirm" : active ? "undiscuss" : "set_discuss", field, status === "DISCUSS" ? old?.note || "" : "");
+}
 function pending() {
-  return [...state.queues.values()].some((q) => q.actor === state.account?.id && q.dirty);
+  return [...state.queues.values(), ...state.reviewQueues.values()].some((q) => q.actor === state.account?.id && q.dirty);
 }
 function resolved(cell) {
-  return reviewResolved(state.record.values[cell.field_id], state.record.reviews[cell.field_id], cell.review_tier);
+  return reviewResolved(state.record.values[cell.field_id], displayedReviews()[cell.field_id], cell.review_tier);
 }
 function counts(module) {
-  return tierSummary(state.record.cells.filter((c) => !module || c.module_id === module), state.record.values, state.record.reviews);
+  return tierSummary(state.record.cells.filter((c) => !module || c.module_id === module), state.record.values, displayedReviews());
+}
+function paintArticleSummary(record, reviews) {
+  const c = tierSummary(record.cells, record.values, reviews), item = state.records.find((r) => r.id === record.record_id);
+  if (!item) return;
+  Object.assign(item, { tier_summary: c, status: record.state.status });
+  const node = document.querySelector(`[data-record="${item.id}"]`), wrap = node?.closest(".library-record");
+  if (wrap) {
+    wrap.dataset.tier = c.highest;
+    decorateTier(wrap.querySelector(".tier-badge"), c);
+    node.querySelector(".meta").textContent = STATUS[item.status];
+  }
+  $("#progress").textContent = `\u5DF2\u5B8C\u6210 ${state.records.filter((r) => r.status === "COMPLETED").length} / ${state.records.length} \xB7 ${state.account?.role === "reviewer" ? "\u672C\u4EBA\u5206\u5DE5" : "\u5168\u5E93\u8303\u56F4"}`;
+  updateNavigation();
 }
 function paintBadges() {
   if (!state.record) return;
   for (const cell of state.record.cells) {
     const label = document.querySelector(`[data-card="${cell.field_id}"] .human-status`);
     if (label) {
-      label.textContent = humanStatus(cell.text, state.record.values[cell.field_id], state.record.reviews[cell.field_id]);
+      label.textContent = humanStatus(cell.text, state.record.values[cell.field_id], displayedReviews()[cell.field_id]);
       label.dataset.status = label.textContent;
     }
   }
   for (const mod of field_registry_default.modules) {
-    const c2 = counts(mod.module_id), cells = state.record.cells.filter((c3) => c3.module_id === mod.module_id), reviewed = cells.filter((c3) => humanStatus(c3.text, state.record.values[c3.field_id], state.record.reviews[c3.field_id]) !== "\u672A\u5BA1\u6838").length;
+    const c = counts(mod.module_id), cells = state.record.cells.filter((c2) => c2.module_id === mod.module_id), reviewed = cells.filter((c2) => humanStatus(c2.text, state.record.values[c2.field_id], displayedReviews()[c2.field_id]) !== "\u672A\u5BA1\u6838").length;
     const summary = document.querySelector(`[data-summary="${mod.module_id}"]`);
-    if (summary) summary.textContent = `\u5F85\u6838 ${c2.pending} \xB7 \u5DF2\u5BA1 ${reviewed}/${cells.length}`;
+    if (summary) summary.textContent = `\u5F85\u6838 ${c.pending} \xB7 \u5DF2\u5BA1 ${reviewed}/${cells.length}`;
     const option = $("#module-picker").querySelector(`[value="${mod.module_id}"]`);
-    if (option) option.textContent = moduleLabel(mod) + "\u3000" + c2.pending;
+    if (option) option.textContent = moduleLabel(mod) + "\u3000" + c.pending;
     const rail = document.querySelector(`[data-module="${mod.module_id}"]`);
     if (rail) {
-      rail.title = moduleLabel(mod) + " \xB7 \u5F85\u6838 " + c2.pending;
+      rail.dataset.tier = c.highest;
+      rail.title = moduleLabel(mod) + " \xB7 \u5F85\u6838 " + c.pending;
       rail.setAttribute("aria-label", rail.title);
     }
   }
   for (const card of document.querySelectorAll("[data-card]")) {
-    const review = state.record.reviews[card.dataset.card], value = state.record.values[card.dataset.card];
+    const review = displayedReviews()[card.dataset.card], value = state.record.values[card.dataset.card];
     for (const b of card.querySelectorAll("[data-review-state]")) b.setAttribute("aria-pressed", String(review?.status === b.dataset.reviewState && review.field_revision === value.revision));
   }
-  const c = counts();
-  const item = state.records.find((r) => r.id === state.record.record_id);
-  if (item) {
-    Object.assign(item, { tier_summary: c, status: state.record.state.status });
-    renderList();
+  for (const card of $("#cards").querySelectorAll("[data-card]")) {
+    const review = displayedReviews()[card.dataset.card], note = card.querySelector(".review-note"), controls = card.querySelector(".discussion-controls");
+    if (note) {
+      note.textContent = review?.status === "DISCUSS" && review.note ? "\u5F85\u786E\u8BA4\uFF1A" + review.note : "";
+      note.hidden = !note.textContent;
+    }
+    if (controls) controls.hidden = review?.status !== "DISCUSS";
   }
+  paintArticleSummary(state.record, displayedReviews());
 }
 function paintStatus() {
   if (!state.record) return;
@@ -928,6 +1108,8 @@ async function selectRecord(id, { attention = false, restoreFocus = null } = {})
     const record = await request("records/" + id);
     if (epoch !== state.epoch) return;
     state.record = record;
+    getReviewQueue(record);
+    renderList();
     state.module = state.positions.get(id)?.module || "M01";
     $("#article-head").textContent = record.record_id.replace("rayyan-", "") + " \xB7 " + record.title + " \xB7 " + record.study_label;
     $("#article-head").title = $("#article-head").textContent;
@@ -1102,6 +1284,7 @@ function focusReview(node, follow = true, force = false) {
   }
 }
 for (const type of ["click", "focusin"]) $("#cards").addEventListener(type, (e) => {
+  if (e.target.closest(".review-actions,.review-sync,.discussion-controls")) return;
   const node = e.target.closest("[data-review-focus]");
   focusReview(node, !e.target.closest("button,a") || !!e.target.closest(".review-actions"));
 });
@@ -1163,26 +1346,41 @@ function renderModule() {
         card.append(more);
       } else card.append(ev);
       if (c.attention.reason) card.append(el("p", c.attention.reason + " " + (c.attention.decision || ""), "reason"));
-      const review = r.reviews[c.field_id];
-      if (review?.note && review.status === "DISCUSS") card.append(el("p", "\u5F85\u786E\u8BA4\uFF1A" + review.note, "reason"));
+      const review = r.reviews[c.field_id], reviewNote = el("p", review?.status === "DISCUSS" && review.note ? "\u5F85\u786E\u8BA4\uFF1A" + review.note : "", "reason review-note");
+      reviewNote.hidden = !reviewNote.textContent;
+      card.append(reviewNote);
       if (state.account.can_write) {
+        const controls = el("div", void 0, "field-controls");
+        for (const n of [...heading.children].filter((n2) => !n2.matches("h3"))) controls.append(n);
         const actions = el("div", void 0, "review-actions");
-        actions.append(button("\u2713 \u5DF2\u6838\u5BF9", () => reviewAction("confirm", c.field_id)), button("? \u5F85\u786E\u8BA4", () => {
-          let box = card.querySelector(".discussion");
-          if (box) {
-            box.focus();
-            return;
-          }
-          box = el("textarea", void 0, "discussion");
-          box.setAttribute("aria-label", field.label + " \u5F85\u786E\u8BA4\u5185\u5BB9");
-          box.placeholder = "\u8BB0\u5F55\u5F85\u786E\u8BA4\u95EE\u9898\uFF08\u4E0D\u8FDB\u5165\u63D0\u53D6\u7ED3\u679C\u5907\u6CE8\uFF09";
-          box.addEventListener("input", () => autosize(box));
-          card.append(box, button("\u63D0\u4EA4\u5F85\u786E\u8BA4", () => reviewAction("discuss", c.field_id, box.value)));
-          box.focus();
-        }));
+        actions.append(button("\u2713 \u5DF2\u6838\u5BF9", () => toggleReview(c.field_id, "CONFIRMED")), button("? \u5F85\u786E\u8BA4", () => toggleReview(c.field_id, "DISCUSS")));
         actions.children[0].dataset.reviewState = "CONFIRMED";
         actions.children[1].dataset.reviewState = "DISCUSS";
-        heading.append(actions);
+        controls.append(actions);
+        heading.append(controls);
+        const sync = el("div", void 0, "review-sync");
+        sync.hidden = true;
+        card.append(sync);
+        const discussion = el("div", void 0, "discussion-controls"), edit = button("\u7F16\u8F91\u5F85\u786E\u8BA4\u8BF4\u660E", () => {
+          let area = discussion.querySelector("textarea");
+          if (area) {
+            area.focus();
+            return;
+          }
+          area = el("textarea", void 0, "discussion");
+          area.value = displayedReviews()[c.field_id]?.note || "";
+          area.setAttribute("aria-label", field.label + " \u5F85\u786E\u8BA4\u5185\u5BB9");
+          area.addEventListener("input", () => autosize(area));
+          discussion.append(area, button("\u63D0\u4EA4\u5F85\u786E\u8BA4", () => {
+            getReviewQueue(r).enqueue("set_discuss", c.field_id, area.value);
+            area.remove();
+            discussion.lastChild.remove();
+          }));
+          area.focus();
+        });
+        discussion.append(edit);
+        discussion.hidden = review?.status !== "DISCUSS";
+        card.append(discussion);
       }
       moduleSection.append(card);
     }
@@ -1200,6 +1398,10 @@ function renderModule() {
   paintBadges();
 }
 async function reviewAction(action, field, text = "") {
+  if (action !== "complete") {
+    getReviewQueue(state.record).enqueue(action, field, text);
+    return;
+  }
   const record = state.record, id = record?.record_id;
   if (!record || !state.account.can_write || state.reviewBusy) return;
   state.reviewBusy = true;
@@ -1266,8 +1468,9 @@ function selectEvidence(targets, index, label, remember2 = true) {
   viewer.open(source, t.page_index + 1, anchor, () => epoch === state.epoch);
 }
 async function enter(data) {
-  for (const q of state.queues.values()) q.deactivate();
+  for (const q of [...state.queues.values(), ...state.reviewQueues.values()]) q.deactivate();
   state.queues.clear();
+  state.reviewQueues.clear();
   globalSave.reset();
   state.account = data.account;
   state.record = null;
@@ -1309,8 +1512,9 @@ $("#logout").onclick = async () => {
     notice(e.message);
     return;
   }
-  for (const q of state.queues.values()) q.deactivate();
+  for (const q of [...state.queues.values(), ...state.reviewQueues.values()]) q.deactivate();
   state.queues.clear();
+  state.reviewQueues.clear();
   state.account = null;
   state.record = null;
   state.epoch++;
