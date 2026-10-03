@@ -1,16 +1,16 @@
 {
   "format": "MERCK_EVIDENCE_VAULT_V2",
-  "version": "I04-fe5b39f6eb3df248d625",
+  "version": "I06-d08560bdb14611b30345",
   "cipher": "AES-GCM",
   "kdf": "PBKDF2-SHA256",
   "salt": "aWfgkkI1YwpU5fYOMSgbsA==",
   "iterations": 600000,
   "boot": {
-    "file": "vault-e805873e20e78b81f8510f358bc1813ebcf5869e79eab188e6f74bca1d68bff5.bin",
-    "bytes": 323078,
-    "sha256": "e805873e20e78b81f8510f358bc1813ebcf5869e79eab188e6f74bca1d68bff5",
-    "iv": "sqxZuYbLrUFLCbNk",
-    "aad": "TUVSQ0tfRVZJREVOQ0VfVjI6STA0LWZlNWIzOWY2ZWIzZGYyNDhkNjI1OmJvb3Q=",
+    "file": "vault-1d32ec2aa1ca99fca8f22d66b0e076fc7239a1e86105e9d72fc6706b19f6927e.bin",
+    "bytes": 333515,
+    "sha256": "1d32ec2aa1ca99fca8f22d66b0e076fc7239a1e86105e9d72fc6706b19f6927e",
+    "iv": "Y1ZYRCm1NDRg7ACx",
+    "aad": "TUVSQ0tfRVZJREVOQ0VfVjI6STA2LWQwODU2MGJkYjE0NjExYjMwMzQ1OmJvb3Q=",
     "compression": "gzip",
     "type": "text/html"
   }
