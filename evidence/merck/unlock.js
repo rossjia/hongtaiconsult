@@ -40,7 +40,7 @@
    const icon=document.createElement('link');icon.rel='icon';icon.href='data:,';document.head.append(icon);
    const lock=document.createElement('button');lock.id='lockPlatform';lock.className='plain-btn';lock.innerHTML='<span class="access-full-label">退出登录</span><span class="access-short-label" aria-hidden="true">退出</span>';lock.setAttribute('aria-label','退出登录');
    const style=document.createElement('style');style.textContent='#lockPlatform .access-short-label{display:none}@media(max-width:900px){#lockPlatform .access-full-label{display:none}#lockPlatform .access-short-label{display:inline}}';document.head.append(style);
-   lock.onclick=async()=>{lock.disabled=true;try{if(persisted)await keyStore('delete');else try{await keyStore('delete')}catch{}resource.dispose();sessionKey=null;location.replace(base.href);}catch{lock.disabled=false;alert('清除登录记忆失败，请在浏览器设置中清除此站点数据。');}};document.querySelector('.top-actions').append(lock);
+   lock.onclick=async()=>{lock.disabled=true;try{if(persisted)await keyStore('delete');else try{await keyStore('delete')}catch{}window.MerckNavigation?.lock();resource.dispose();sessionKey=null;location.replace(base.href);}catch{lock.disabled=false;alert('清除登录记忆失败，请在浏览器设置中清除此站点数据。');}};document.querySelector('.top-actions').append(lock);
    if(rememberFailed){const note=document.createElement('p');note.textContent='浏览器未允许保存登录状态，下次仍需输入密码。';note.setAttribute('role','status');note.style.cssText='position:fixed;bottom:15px;left:15px;right:15px;z-index:9000;padding:14px;background:white;border:1px solid #9574aa;color:#503291;font-size:14px';document.body.append(note);setTimeout(()=>note.remove(),9000);}
    addEventListener('pageshow',event=>{if(event.persisted)location.replace(base.href)});
   }catch(error){
