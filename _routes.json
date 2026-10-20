@@ -5,7 +5,9 @@
     "/tools/srs53-review/api/*",
     "/review/pc497/api",
     "/review/pc497/api/*",
-    "/evidence/merck/api/fulltext/*"
+    "/evidence/merck/api/fulltext/*",
+    "/evidence/daiichisankyo",
+    "/evidence/daiichisankyo/*"
   ],
   "exclude": []
 }
